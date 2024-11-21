@@ -6,5 +6,9 @@
 </script>
 
 <ParaglideJS {i18n}>
-	{@render children()}
+	<div class="flex flex-col">
+		<div>
+			{@render children()}
+		</div>		
+	</div>
 </ParaglideJS>

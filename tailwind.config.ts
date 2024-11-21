@@ -11,5 +11,5 @@ export default {
 		extend: {}
 	},
 
-	plugins: [typography, forms, containerQueries, aspectRatio]
+	plugins: [typography, forms, containerQueries, aspectRatio, require('daisyui')]
 } satisfies Config;

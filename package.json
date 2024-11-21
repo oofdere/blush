@@ -17,6 +17,7 @@
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@types/eslint": "^9.6.0",
 		"autoprefixer": "^10.4.20",
+		"daisyui": "^4.12.14",
 		"eslint": "^9.7.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -32,6 +33,7 @@
 		"vite": "^5.0.3"
 	},
 	"dependencies": {
+		"@atproto/api": "^0.13.16",
 		"@inlang/paraglide-sveltekit": "^0.11.1",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/container-queries": "^0.1.1",
