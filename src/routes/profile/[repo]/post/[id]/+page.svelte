@@ -37,7 +37,7 @@
 			</div>
 		{/await}
 	</div>
-	{#await data.thread}
+	{#await data.post}
 		loading post
 	{:then thread}
 		{JSON.stringify(thread)}
