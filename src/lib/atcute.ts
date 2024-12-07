@@ -1,6 +1,5 @@
 import { XRPC, CredentialManager } from '@atcute/client';
-import type { AppBskyFeedPost, AppBskyRichtextFacet, Brand } from '@atcute/client/lexicons';
-import { Enum, pack } from 'crabrave';
+import type { AppBskyFeedPost, AppBskyRichtextFacet, Brand } from '@atcute/client/lexicons';    
 
 export const manager = new CredentialManager({ service: 'https://api.bsky.app' });
 export const rpc = new XRPC({ handler: manager });
