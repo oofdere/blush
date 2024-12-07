@@ -37,29 +37,9 @@
 			</div>
 		{/await}
 	</div>
-	{#await data.post}
+	{#await data.thread}
 		loading post
-	{:then post}
-		<div>
-		</div>
-		{#if post.value.embed?.images}
-			{@const images = post.value.embed.images as Image[]}
-			{#each images as i}
-				{JSON.stringify(i)}
-                {#await data.thread}
-                    loading...
-                {:then thread}
-                thread
-                    {JSON.stringify(thread.data.thread.post)}
-				    <img src={i.image.ref.$link} alt={i.alt} />
-                /thread
-                {/await}
-                {i.alt || 'no alt text :('}
-			{/each}
-		{/if}
-		<hr />
-		<div>
-			{JSON.stringify(post.value)}
-		</div>
+	{:then thread}
+		{JSON.stringify(thread)}
 	{/await}
 </div>

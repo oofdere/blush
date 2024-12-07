@@ -2,7 +2,7 @@
 	//import { i18n } from '$lib/i18n';
 	//import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	//import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
-	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
+	//import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
 
 	import '../app.css';
 	let { children } = $props();

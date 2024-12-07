@@ -1,12 +1,11 @@
-import { agent } from '$lib/atproto';
+import { rpc } from '$lib/atcute';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async ({ params }) => {
-    const profile = await agent.getProfile({
-        actor: params.repo
-    })
 
-	return {
-		profile: profile.data
+    const profile = await rpc.get('app.bsky.actor.getProfile', { params: { actor: params.repo } })
+    
+    return {
+		profile: profile.data,
 	};
 };

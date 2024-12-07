@@ -1,5 +1,9 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
+import 'unplugin-icons/types/svelte'
+
+/// <reference types="@atcute/bluesky/lexicons" />
+
 declare global {
 	namespace App {
 		// interface Error {}
@@ -8,6 +12,7 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
 }
 
 export {};
