@@ -5,7 +5,8 @@
 	import LucidePin from '~icons/lucide/pin';
 	import LucideHeart from '~icons/lucide/heart';
 	import LucideMessageSquare from '~icons/lucide/message-square';
-	import { type Component, type Snippet } from 'svelte';
+	import { onMount, type Component, type Snippet } from 'svelte';
+	import { rpc } from '$lib/atcute.svelte';
 
 	type record = AppBskyFeedPost.Record;
 
@@ -43,13 +44,15 @@
 		{data.profile.description}
 	</div>
 
-	<div class="flex flex-col gap-2 border-slate-400 border-opacity-45 bg-cyan-950 px-6 py-4">
+	<div class="flex flex-col gap-2 border-slate-400 border-opacity-45 inse bg-cyan-950 px-6 py-4">
 		<div class="flex flex-col gap-4">
 			{#await data.feed then res}
 				{@const feed = res.data.feed}
 				{#each feed as post}
 					{@const angle = Math.floor(Math.random() * (1 - -1) + -1)}
 					{@const record = post.post.record as record}
+					{@const thread = rpc.get('app.bsky.feed.getPostThread', {params: {uri: post.post.uri}}) }
+
 					<div style="transform:rotate({angle}deg)">
 						{#if post.reason}
 							{@const reason = post.reason.$type}
@@ -58,8 +61,8 @@
 									<LucidePin />
 									<span>pinned post!</span>
 								{:else if reason === 'app.bsky.feed.defs#reasonRepost'}
-									<LucideRefreshCw />
-									<span>reposted by</span> <img class="h-6" src={data.profile.avatar} />
+									<LucideRefreshCw class="animate-spina" />
+									<span>reposted by</span> <img class="h-6" src={data.profile.avatar} alt="avatar" />
 									<span>{data.profile.displayName}</span>
 								{/if}
 							</div>
@@ -71,7 +74,7 @@
 								{#if post.post.author.did !== data.profile.did}
 									<a
 										href="/profile/{post.post.author.did}"
-										class='border-b-2 border-slate-400 border-opacity-50 bg-[url("{post.post.author.avatar}")] flex items-center gap-2'
+										class='border-b-2 border-slate-400 border-opacity-50 flex items-center gap-2'
 									>
 										<img class="w-12" src={post.post.author.avatar} alt="avatar" />
 										<div class="flex flex-col">
@@ -86,7 +89,7 @@
 								{/if}
 
 								{#if record.text}
-									<div class="border-slate-400 border-opacity-50 px-2 pt-2">
+									<div class="border-slate-400 border-opacity-50 px-2 pt-2 whitespace-pre-line">
 										{record.text}
 									</div>
 								{/if}
@@ -102,8 +105,16 @@
 										{/if}
 
 										{#if embed.$type === 'app.bsky.embed.images'}
-											{#each embed.images as image}
-												image: {image.alt || 'no alt text :('}
+											{#await thread}
+												loading . . .
+											{:then t} 
+												{console.log(t)}
+												<img src={t.data.thread.post.embed.images[0].fullsize} alt={t.data.thread.post.embed.images[0].alt} />
+											{/await}	
+										
+										{#each embed.images as image}
+											{image.alt}
+												
 											{/each}
 										{/if}
 
@@ -115,10 +126,12 @@
 											media AND quote: {JSON.stringify(embed)}
 										{/if}
 									</div>
+                                    {#if post.post.author.did === data.profile.did}
 									<div class="px-2 py-1 opacity-60">
 										{record.createdAt}
 									</div>
 									<div class="border-b-2 border-slate-400 border-opacity-50"></div>
+                                    {/if}
 								{:else}
 									{#if post.post.author.did === data.profile.did}
 										<div class="px-2 opacity-60">

@@ -1,4 +1,4 @@
-import { rpc } from '$lib/atcute';
+import { rpc } from '$lib/atcute.svelte';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params, parent }) => {
