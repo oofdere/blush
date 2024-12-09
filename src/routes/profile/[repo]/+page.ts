@@ -7,7 +7,8 @@ type RT = XRPCResponse<AppBskyFeedGetAuthorFeed.Output>;
 
 
 export const load: PageLoad = async ({ params, parent }) => {
-	const feed = rpc.get('app.bsky.feed.getAuthorFeed', {params: { actor: params.repo, includePins: true }})
+	const feed = rpc.get('app.bsky.feed.getAuthorFeed', {params: { actor: params.repo, includePins: true, filter: 'posts_no_replies' }})
+
 	return {
 		feed
 	};

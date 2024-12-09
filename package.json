@@ -37,7 +37,6 @@
 	"dependencies": {
 		"@atcute/bluesky": "^1.0.9",
 		"@atcute/client": "^2.0.6",
-		"@atproto/api": "^0.13.19",
 		"@inlang/paraglide-sveltekit": "^0.11.5",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/container-queries": "^0.1.1",
