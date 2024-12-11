@@ -1,137 +1,185 @@
 <script lang="ts">
-    import type { AppBskyActorDefs, AppBskyEmbedImages, AppBskyFeedDefs, AppBskyFeedPost, Brand } from '@atcute/client/lexicons';
+	import type {
+		AppBskyActorDefs,
+		AppBskyEmbedExternal,
+		AppBskyEmbedImages,
+		AppBskyFeedDefs,
+		AppBskyFeedGetPostThread,
+		AppBskyFeedPost,
+		Brand
+	} from '@atcute/client/lexicons';
 	import LucideRefreshCw from '~icons/lucide/refresh-cw';
-    import LucidePin from '~icons/lucide/pin';
+	import LucidePin from '~icons/lucide/pin';
 	import LucideHeart from '~icons/lucide/heart';
 	import LucideMessageSquare from '~icons/lucide/message-square';
 	import { onMount, type Component, type Snippet } from 'svelte';
 	import { rpc } from '$lib/atcute.svelte';
+	import Post from './Post.svelte';
+	import type { XRPCResponse } from '@atcute/client';
+	8;
 
-    const { post, profile, showAuthor }: { post: AppBskyFeedDefs.FeedViewPost, profile: AppBskyActorDefs.ProfileViewDetailed, showAuthor: boolean } = $props();
+	const {
+		post,
+		profile,
+		showAuthor
+	}: {
+		post: AppBskyFeedDefs.FeedViewPost | AppBskyFeedDefs.ThreadViewPost;
+		profile: AppBskyActorDefs.ProfileViewDetailed;
+		showAuthor: boolean;
+	} = $props();
 
-    const angle = Math.floor(Math.random() * (1 - -1) + -1)
+	const angle = Math.floor(Math.random() * (1 - -1) + -1);
 
-    const record = post.post.record as AppBskyFeedPost.Record
+	const record = post.post.record as AppBskyFeedPost.Record;
 
-    const thread = rpc.get('app.bsky.feed.getPostThread', {params: {uri: post.post.uri}})
+	const thread = rpc.get('app.bsky.feed.getPostThread', { params: { uri: post.post.uri } });
 </script>
 
-					<div style="transform:rotate({angle}deg)" class="text-white">
-						{#if post.reason}
-							{@const reason = post.reason.$type}
-							<div class="flex items-center justify-center gap-2 p-2 pt-0 opacity-60">
-								{#if reason === 'app.bsky.feed.defs#reasonPin'}
-									<LucidePin />
-									<span>pinned post!</span>
-								{:else if reason === 'app.bsky.feed.defs#reasonRepost'}
-									<LucideRefreshCw class="animate-spina" />
-									<span>reposted by</span> <img class="h-6" src={profile.avatar} alt="avatar" />
-									<span>{profile.displayName}</span>
-								{/if}
-							</div>
-						{/if}
-						<a href="/profile/{post.post.author.did}/post/{post.post.uri.slice(-13)}">
-							<div
-								class="overflow-clip rounded-lg border-2 border-slate-400 border-opacity-50 bg-cyan-950 shadow-md shadow-black"
-							>
-								{#if showAuthor}
-									<a
-										href="/profile/{post.post.author.did}"
-										class='border-b-2 border-slate-400 border-opacity-50 flex items-center gap-2'
-									>
-										<img class="w-12" src={post.post.author.avatar} alt="avatar" />
-										<div class="flex flex-col">
-											<span>
-												{post.post.author.displayName}
-											</span>
-											<span>
-												{record.createdAt}
-											</span>
-										</div>
-									</a>
-								{/if}
-
-								{#if record.text}
-									<div class="border-slate-400 border-opacity-50 px-2 pt-2 whitespace-pre-line">
-										{record.text}
-									</div>
-								{/if}
-
-								{#if record.embed}
-									{#if record.text}
-										<div class="border-b-2 border-slate-400 border-opacity-50 pt-2"></div>
-									{/if}
-									{@const embed = record.embed}
-									<div class=" border-b-2 border-slate-400 border-opacity-50">
-										{#if embed.$type === 'app.bsky.embed.external'}
-											{embed.external.uri}
-										{/if}
-
-										{#if embed.$type === 'app.bsky.embed.images'}
-											{#await thread}
-												{#each embed.images as image}
-													<div class="w-full bg-black" style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}">
-														
-													</div>
-													<div>{image.alt}</div>
-												{/each}
-												loading . . .
-											{:then {data} }
-												{@const embed: AppBskyEmbedImages.View = (data.thread as any).post.embed}
-												{#each embed.images as image: ViewImage}
-
-													<div class="w-full bg-black" style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}">
-														<img class="w-full" width={image.aspectRatio?.width} height={image.aspectRatio?.height} src={image.fullsize} alt={image.alt} />
-													{image.alt}
-														
-													</div>
-												{/each}
-												
-											{/await}	
-										
-										
-										{/if}
-
-										{#if embed.$type === 'app.bsky.embed.record'}
-											quote: {JSON.stringify(embed)}
-										{/if}
-
-										{#if embed.$type === 'app.bsky.embed.recordWithMedia'}
-											media AND quote: {JSON.stringify(embed)}
-										{/if}
-									</div>
-                                    {#if post.post.author.did === profile.did}
-									<div class="px-2 py-1 opacity-60">
-										{record.createdAt}
-									</div>
-									<div class="border-b-2 border-slate-400 border-opacity-50"></div>
-                                    {/if}
-								{:else}
-									{#if post.post.author.did === profile.did}
-										<div class="px-2 opacity-60">
-											{record.createdAt}
-										</div>
-									{/if}
-									<div class="border-b-2 border-slate-400 border-opacity-50 pt-2"></div>
-								{/if}
-
-								{#snippet reaction(Icon: Component, count?: number)}
-									<div class="flex items-center gap-2 p-2">
-										<Icon />
-										{count}
-									</div>
-								{/snippet}
-
-								<div class="flex divide-x-2 divide-slate-400 divide-opacity-50">
-									{@render reaction(LucideMessageSquare, post.post.replyCount)}
-									{@render reaction(LucideHeart, post.post.likeCount)}
-									{@render reaction(
-										LucideRefreshCw,
-										post.post.quoteCount! + post.post.repostCount!
-									)}
-									<div></div>
-									<!-- for final divider line -->
-								</div>
-							</div>
-						</a>
+<div style="transform:rotate({angle}deg)" class="text-white">
+	{#if 'reason' in post}
+		{@const reason = post.reason!.$type}
+		<div class="flex items-center justify-center gap-2 p-2 pt-0 opacity-60">
+			{#if reason === 'app.bsky.feed.defs#reasonPin'}
+				<LucidePin />
+				<span>pinned post!</span>
+			{:else if reason === 'app.bsky.feed.defs#reasonRepost'}
+				<LucideRefreshCw class="animate-spina" />
+				<span>reposted by</span> <img class="h-6" src={profile.avatar} alt="avatar" />
+				<span>{profile.displayName}</span>
+			{/if}
+		</div>
+	{/if}
+	<a href="/profile/{post.post.author.did}/post/{post.post.uri.slice(-13)}">
+		<div
+			class="overflow-clip rounded-lg border-2 border-slate-400 border-opacity-50 bg-cyan-950 shadow-md shadow-black"
+		>
+			{#if showAuthor}
+				<a
+					href="/profile/{post.post.author.did}"
+					class="flex items-center gap-2 border-b-2 border-slate-400 border-opacity-50"
+				>
+					<img class="w-12" src={post.post.author.avatar} alt="avatar" />
+					<div class="flex flex-col">
+						<span>
+							{post.post.author.displayName}
+						</span>
+						<span>
+							{record.createdAt}
+						</span>
 					</div>
+				</a>
+			{/if}
+
+			{#if record.text}
+				<div class="whitespace-pre-line border-slate-400 border-opacity-50 px-2 pt-2">
+					{record.text}
+				</div>
+			{/if}
+
+			{#if record.embed}
+				{#if record.text}
+					<div
+						class="{record.embed.$type !== 'app.bsky.embed.record'
+							? 'border-b-2'
+							: ''} border-slate-400 border-opacity-50 pt-2"
+					></div>
+				{/if}
+				{@const embed = record.embed}
+				<div class="border-b-2 border-slate-400 border-opacity-50">
+					{#if embed.$type === 'app.bsky.embed.external'}
+						<a href={embed.external.uri}>
+							{#if embed.external.uri.includes('media.tenor.com')}
+								<img src={embed.external.uri} />
+							{:else}
+								{#await thread}
+									loading . . .
+								{:then { data }}
+									{@const embed: AppBskyEmbedExternal.View = (data.thread as any).post.embed}
+									<img class="w-full" src={embed.external.thumb} />
+								{/await}
+								<div class="p-2">
+									<span class="font-bold">{embed.external.title}</span>
+									<span class="">{embed.external.description}</span>
+									<span class="font-mono">{embed.external.uri}</span>
+								</div>
+							{/if}
+						</a>
+					{/if}
+
+					{#if embed.$type === 'app.bsky.embed.images'}
+						{#await thread}
+							{#each embed.images as image}
+								<div
+									class="w-full bg-black"
+									style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}"
+								>
+									<div>{image.alt}</div>
+								</div>
+							{/each}
+							loading . . .
+						{:then { data }}
+							{@const embed: AppBskyEmbedImages.View = (data.thread as any).post.embed}
+							{#each embed.images as image: ViewImage}
+								<div
+									class="w-full bg-black"
+									style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}"
+								>
+									<img
+										class="w-full"
+										width={image.aspectRatio?.width}
+										height={image.aspectRatio?.height}
+										src={image.fullsize}
+										alt={image.alt}
+									/>
+								</div>
+							{/each}
+						{/await}
+					{/if}
+
+					{#if embed.$type === 'app.bsky.embed.record' || embed.$type === 'app.bsky.embed.recordWithMedia'}
+						{@const e = rpc.get('app.bsky.feed.getPostThread', {
+							params: { uri: embed.record.uri || embed.record.record.uri }
+						})}
+						{#await e}
+							add a skeleton here at some point
+						{:then { data }}
+							<div class="p-4">
+								{#if data.thread.$type === 'app.bsky.feed.defs#threadViewPost'}
+									<Post post={data.thread} profile={data.thread.post.author} showAuthor={true} />
+								{/if}
+							</div>
+						{/await}
+					{/if}
+				</div>
+				{#if post.post.author.did === profile.did}
+					<div class="px-2 py-1 opacity-60">
+						{record.createdAt}
+					</div>
+					<div class="border-b-2 border-slate-400 border-opacity-50"></div>
+				{/if}
+			{:else}
+				{#if post.post.author.did === profile.did}
+					<div class="px-2 opacity-60">
+						{record.createdAt}
+					</div>
+				{/if}
+				<div class="border-b-2 border-slate-400 border-opacity-50 pt-2"></div>
+			{/if}
+
+			{#snippet reaction(Icon: Component, count?: number)}
+				<div class="flex items-center gap-2 p-2">
+					<Icon />
+					{count}
+				</div>
+			{/snippet}
+
+			<div class="flex divide-x-2 divide-slate-400 divide-opacity-50">
+				{@render reaction(LucideMessageSquare, post.post.replyCount)}
+				{@render reaction(LucideHeart, post.post.likeCount)}
+				{@render reaction(LucideRefreshCw, post.post.quoteCount! + post.post.repostCount!)}
+				<div></div>
+				<!-- for final divider line -->
+			</div>
+		</div>
+	</a>
+</div>

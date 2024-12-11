@@ -23,6 +23,7 @@
 				<div class="-gap-2 text-shadow flex flex-col">
 					<span class="text-2xl font-semibold">{data.profile.displayName}</span>
 					<span class="text-gray-400">@{data.profile.handle}</span>
+					<span>{(new Date(data.profile.createdAt!)).toDateString()}</span>
 				</div>
 			</div>
 		</div>
@@ -42,16 +43,25 @@
 		</span>
 	</div>
 
-	<div class="-mt-5 whitespace-pre-line px-6 pb-4">
-		{data.profile.description}
+	<div class="-mt-5 whitespace-pre-line px-6 pb-2">
+		<p class="pb-2">
+			{data.profile.description}
+		</p>
+
+		{#await data.pinned then pinned}
+		{#if pinned.data.feed[0].reason?.$type === 'app.bsky.feed.defs#reasonPin'}
+			<Post post={pinned.data.feed[0]} profile={data.profile} showAuthor={false} />
+			<div class="pb-6 flex"></div>
+		{/if}
+		{/await}
 	</div>
 
-	<div class="flex flex-col gap-2 border-slate-400 border-opacity-45 inse bg-cyan-950 px-6 py-4">
+	<div class="flex flex-col gap-2 border-slate-400 border-opacity-45 inse bg-cyan-950 px-6 py-4 ">
 		<div class="flex flex-col gap-4">
 			{#await data.feed then res}
 				{@const feed = res.data.feed}
 				{#each feed as post}
-					<Post {post} profile={data.profile} />
+					<Post {post} profile={data.profile} showAuthor={data.profile.did !== post.post.author.did} />
 				{/each}
 			{/await}
 		</div>
@@ -69,6 +79,7 @@
 			var(--bg-url);
 		background-size: cover;
 	}
+
 	.text-shadow {
 		filter: drop-shadow(1px 1px rgb(0 0 0 / 0.69));
 	}
