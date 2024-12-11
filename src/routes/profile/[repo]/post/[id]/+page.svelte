@@ -24,7 +24,7 @@
 	};
 </script>
 
-<div class="min-h-screen w-screen flex-col overflow-clip bg-cyan-950 text-white">
+<div class="min-h-screen w-screen flex-col bg-cyan-950 text-white">
 	{#await data.profile then profile}
 	<a href="/profile/{profile.did}" class="bg-slate-800">
 		<div class="header h-48 bg-cover text-white" style:--bg-url={`url('${profile.banner}')`}>

@@ -16,6 +16,7 @@
 	import { rpc } from '$lib/atcute.svelte';
 	import Post from './Post.svelte';
 	import type { XRPCResponse } from '@atcute/client';
+	import { formatDistanceToNow } from "date-fns";
 	8;
 
 	const {
@@ -28,11 +29,13 @@
 		showAuthor: boolean;
 	} = $props();
 
-	const angle = Math.floor(Math.random() * (1 - -1) + -1);
-
+	//const angle = Math.floor(Math.random() * (1 - -1) + -1);
+	const angle = 0;
 	const record = post.post.record as AppBskyFeedPost.Record;
 
 	const thread = rpc.get('app.bsky.feed.getPostThread', { params: { uri: post.post.uri } });
+
+	const date = formatDistanceToNow(record.createdAt) + " ago"
 </script>
 
 <div style="transform:rotate({angle}deg)" class="text-white">
@@ -51,7 +54,7 @@
 	{/if}
 	<a href="/profile/{post.post.author.did}/post/{post.post.uri.slice(-13)}">
 		<div
-			class="overflow-clip rounded-lg border-2 border-slate-400 border-opacity-50 bg-cyan-950 shadow-md shadow-black"
+			class=" rounded-lg border-2 border-slate-400 border-opacity-50 bg-cyan-950 shadow-md shadow-black"
 		>
 			{#if showAuthor}
 				<a
@@ -64,7 +67,7 @@
 							{post.post.author.displayName}
 						</span>
 						<span>
-							{record.createdAt}
+							{date}
 						</span>
 					</div>
 				</a>
@@ -89,7 +92,9 @@
 					{#if embed.$type === 'app.bsky.embed.external'}
 						<a href={embed.external.uri}>
 							{#if embed.external.uri.includes('media.tenor.com')}
-								<img src={embed.external.uri} />
+							<div class="w-screen bg-red-500 -translate-x-6">
+								<img src={embed.external.uri} class="" />
+							</div>
 							{:else}
 								{#await thread}
 									loading . . .
@@ -119,20 +124,27 @@
 							loading . . .
 						{:then { data }}
 							{@const embed: AppBskyEmbedImages.View = (data.thread as any).post.embed}
-							{#each embed.images as image: ViewImage}
-								<div
-									class="w-full bg-black"
-									style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}"
-								>
-									<img
-										class="w-full"
-										width={image.aspectRatio?.width}
-										height={image.aspectRatio?.height}
-										src={image.fullsize}
-										alt={image.alt}
-									/>
-								</div>
-							{/each}
+							<div class="flex w-screen -translate-x-6 overflow-x-scroll snap-x snap-mandatory overflow-y-clip" style="aspect-ratio: {embed.images[0].aspectRatio?.width}/{embed.images[0].aspectRatio?.height}">
+
+								{#each embed.images as image: ViewImage, key}
+									<div
+										class="w-full h-full flex items-center bg-black snap-start relative touch-manipulation"
+										style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}"
+									>
+										<img
+											class="w-full"
+											width={image.aspectRatio?.width}
+											height={image.aspectRatio?.height}
+											src={image.fullsize}
+											alt={image.alt}
+										/>
+										{#if embed.images.length > 1}
+										<progress value={key + 1} max={embed.images.length} class="absolute top-0 w-full h-1 text-cyan-500">{key + 1}/{embed.images.length}</progress>
+										{/if}
+									</div>
+								{/each}
+							</div>
+							
 						{/await}
 					{/if}
 
@@ -153,14 +165,14 @@
 				</div>
 				{#if post.post.author.did === profile.did}
 					<div class="px-2 py-1 opacity-60">
-						{record.createdAt}
+						{date}
 					</div>
 					<div class="border-b-2 border-slate-400 border-opacity-50"></div>
 				{/if}
 			{:else}
 				{#if post.post.author.did === profile.did}
 					<div class="px-2 opacity-60">
-						{record.createdAt}
+						{date}
 					</div>
 				{/if}
 				<div class="border-b-2 border-slate-400 border-opacity-50 pt-2"></div>

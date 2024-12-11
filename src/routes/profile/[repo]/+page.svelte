@@ -8,6 +8,7 @@
 	import { onMount, type Component, type Snippet } from 'svelte';
 	import { rpc } from '$lib/atcute.svelte';
 	import Post from '$lib/components/Post.svelte';
+	import { formatDistanceToNow } from "date-fns";
 	 const a: AppBskyEmbedImages.View = {}
 
 	type record = AppBskyFeedPost.Record;
@@ -15,15 +16,15 @@
 	let { data }: { data: PageData } = $props();
 </script>
 
-<div class="min-h-screen w-screen flex-col overflow-clip bg-cyan-800 text-white">
-	<div class="bg-slate-800">
+<div class="min-h-screen w-screen bg-cyan-800 text-white">
+	<div class="bg-slate-800 top-0 z-10">
 		<div class="header h-48 bg-cover text-white" style:--bg-url={`url('${data.profile.banner}')`}>
 			<div class="flex items-center gap-3 p-6 pb-10 pt-16">
 				<img src={data.profile.avatar} class="avatar w-20 rounded-xl" alt="avatar" />
 				<div class="-gap-2 text-shadow flex flex-col">
 					<span class="text-2xl font-semibold">{data.profile.displayName}</span>
 					<span class="text-gray-400">@{data.profile.handle}</span>
-					<span>{(new Date(data.profile.createdAt!)).toDateString()}</span>
+					<span>{formatDistanceToNow(new Date(data.profile.createdAt))} ago</span>
 				</div>
 			</div>
 		</div>
