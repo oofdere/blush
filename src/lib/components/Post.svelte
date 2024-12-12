@@ -17,7 +17,7 @@
 	import Post from './Post.svelte';
 	import type { XRPCResponse } from '@atcute/client';
 	import { formatDistanceToNow } from "date-fns";
-	8;
+	import { segmentize } from "@atcute/bluesky-richtext-segmenter";
 
 	const {
 		post,
@@ -36,6 +36,8 @@
 	const thread = rpc.get('app.bsky.feed.getPostThread', { params: { uri: post.post.uri } });
 
 	const date = formatDistanceToNow(record.createdAt) + " ago"
+
+	const textsegments = segmentize(record.text, record.facets)
 </script>
 
 <div style="transform:rotate({angle}deg)" class="text-white">
@@ -75,7 +77,24 @@
 
 			{#if record.text}
 				<div class="whitespace-pre-line border-slate-400 border-opacity-50 px-2 pt-2">
-					{record.text}
+					{#each textsegments as s}
+						{#if s.features}
+							{#each s.features as f}
+								<span class="text-green-400">
+									{#if f.$type === 'app.bsky.richtext.facet#link'}
+									<a href={f.uri}>{s.text}</a>
+								{:else if f.$type === 'app.bsky.richtext.facet#mention'}
+									<a href="/profile/{f.did}">{s.text}</a>
+								{:else if f.$type === 'app.bsky.richtext.facet#tag'}
+									#{f.tag}
+								{/if}
+								</span>
+								
+							{/each}
+						{:else}
+							{s.text}
+						{/if}
+					{/each}
 				</div>
 			{/if}
 
@@ -93,7 +112,7 @@
 						<a href={embed.external.uri}>
 							{#if embed.external.uri.includes('media.tenor.com')}
 							<div class="w-screen bg-red-500 -translate-x-6">
-								<img src={embed.external.uri} class="" />
+								<img src={embed.external.uri} class="w-full" />
 							</div>
 							{:else}
 								{#await thread}
@@ -124,8 +143,7 @@
 							loading . . .
 						{:then { data }}
 							{@const embed: AppBskyEmbedImages.View = (data.thread as any).post.embed}
-							<div class="flex w-screen -translate-x-6 overflow-x-scroll snap-x snap-mandatory overflow-y-clip" style="aspect-ratio: {embed.images[0].aspectRatio?.width}/{embed.images[0].aspectRatio?.height}">
-
+							<div class="flex w-screen -translate-x-7 overflow-x-scroll snap-x snap-mandatory overflow-y-clip" style="aspect-ratio: {embed.images[0].aspectRatio?.width}/{embed.images[0].aspectRatio?.height}">
 								{#each embed.images as image: ViewImage, key}
 									<div
 										class="w-full h-full flex items-center bg-black snap-start relative touch-manipulation"
@@ -139,7 +157,7 @@
 											alt={image.alt}
 										/>
 										{#if embed.images.length > 1}
-										<progress value={key + 1} max={embed.images.length} class="absolute top-0 w-full h-1 text-cyan-500">{key + 1}/{embed.images.length}</progress>
+										<progress value={key + 1} max={embed.images.length} class="absolute top-0 w-full h-1 text-cyan-500"></progress>
 										{/if}
 									</div>
 								{/each}

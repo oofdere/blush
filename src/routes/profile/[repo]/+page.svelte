@@ -9,11 +9,18 @@
 	import { rpc } from '$lib/atcute.svelte';
 	import Post from '$lib/components/Post.svelte';
 	import { formatDistanceToNow } from "date-fns";
-	 const a: AppBskyEmbedImages.View = {}
+	import { segmentize } from '@atcute/bluesky-richtext-segmenter';
+	import { tokenize } from '@atcute/bluesky-richtext-parser';
+
+	let { data }: { data: PageData } = $props();
+
+	const textsegments = tokenize(data.profile.description!) || []
+
 
 	type record = AppBskyFeedPost.Record;
 
-	let { data }: { data: PageData } = $props();
+
+
 </script>
 
 <div class="min-h-screen w-screen bg-cyan-800 text-white">
@@ -46,7 +53,17 @@
 
 	<div class="-mt-5 whitespace-pre-line px-6 pb-2">
 		<p class="pb-2">
-			{data.profile.description}
+			{#each textsegments as f}
+				{#if f.type === 'link' || f.type === 'autolink'}
+					<a class="text-green-400" href={f.url}>{f.raw}</a>
+				{:else if f.type === 'mention'}
+					<a class="text-green-400" href="/profile/{f.handle}">@{f.handle}</a>
+				{:else if f.type === 'topic'}
+					<a class="text-green-400" href="#hello">#{f.name}</a>
+				{:else}
+					{f.raw}
+				{/if}
+			{/each}
 		</p>
 
 		{#await data.pinned then pinned}
