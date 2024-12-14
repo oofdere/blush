@@ -3,6 +3,7 @@
 		AppBskyActorDefs,
 		AppBskyEmbedExternal,
 		AppBskyEmbedImages,
+		AppBskyEmbedVideo,
 		AppBskyFeedDefs,
 		AppBskyFeedGetPostThread,
 		AppBskyFeedPost,
@@ -161,6 +162,29 @@
 										{/if}
 									</div>
 								{/each}
+							</div>
+							
+						{/await}
+					{/if}
+
+					{#if embed.$type === 'app.bsky.embed.video'}
+						{#await thread}
+
+								<div
+									class="w-full bg-black"
+									style="aspect-ratio: {embed.aspectRatio?.width}/{embed.aspectRatio?.height}"
+								>
+								</div>
+
+							loading . . .
+						{:then { data }}
+							{@const embed: AppBskyEmbedVideo.View = (data.thread as any).post.embed}
+							{console.log(embed)}
+							<div class="flex w-screen -translate-x-7" style="aspect-ratio: {embed.aspectRatio?.width}/{embed.aspectRatio?.height}">
+								<video controls>
+									<source src={embed.playlist}>
+									
+								</video>
 							</div>
 							
 						{/await}
