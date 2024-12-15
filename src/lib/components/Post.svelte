@@ -41,7 +41,7 @@
 	const textsegments = segmentize(record.text, record.facets)
 </script>
 
-<div style="transform:rotate({angle}deg)" class="text-white">
+<div style="transform:rotate({angle}deg)" class="text-white max-w-96">
 	{#if 'reason' in post}
 		{@const reason = post.reason!.$type}
 		<div class="flex items-center justify-center gap-2 p-2 pt-0 opacity-60">
@@ -112,7 +112,7 @@
 					{#if embed.$type === 'app.bsky.embed.external'}
 						<a href={embed.external.uri}>
 							{#if embed.external.uri.includes('media.tenor.com')}
-							<div class="w-screen bg-red-500 -translate-x-6">
+							<div class="w-full bg-red-500">
 								<img src={embed.external.uri} class="w-full" />
 							</div>
 							{:else}
@@ -144,7 +144,7 @@
 							loading . . .
 						{:then { data }}
 							{@const embed: AppBskyEmbedImages.View = (data.thread as any).post.embed}
-							<div class="flex w-screen -translate-x-7 overflow-x-scroll snap-x snap-mandatory overflow-y-clip" style="aspect-ratio: {embed.images[0].aspectRatio?.width}/{embed.images[0].aspectRatio?.height}">
+							<div class="flex w-full overflow-x-scroll snap-x snap-mandatory overflow-y-clip" style="aspect-ratio: {embed.images[0].aspectRatio?.width}/{embed.images[0].aspectRatio?.height}">
 								{#each embed.images as image: ViewImage, key}
 									<div
 										class="w-full h-full flex items-center bg-black snap-start relative touch-manipulation"
@@ -180,7 +180,7 @@
 						{:then { data }}
 							{@const embed: AppBskyEmbedVideo.View = (data.thread as any).post.embed}
 							{console.log(embed)}
-							<div class="flex w-screen -translate-x-7" style="aspect-ratio: {embed.aspectRatio?.width}/{embed.aspectRatio?.height}">
+							<div class="flex w-full" style="aspect-ratio: {embed.aspectRatio?.width}/{embed.aspectRatio?.height}">
 								<video controls>
 									<source src={embed.playlist}>
 									

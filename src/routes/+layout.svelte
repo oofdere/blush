@@ -25,7 +25,7 @@
 			</svelte:boundary>
 </div>
 
-<div class="sticky w-screen bottom-0 text-white bg-cyan-800 flex flex-col">
+<div class="sticky w-screen bottom-0 text-white bg-cyan-800 flex flex-col md:hidden">
 	<div class="flex justify-around h-12">
 		<a class="w-full text-center flex items-center justify-center">
 			<div class="size-16 rounded-lg bg-red-500 outline-8 outline outline-cyan-950 -translate-y-4">
