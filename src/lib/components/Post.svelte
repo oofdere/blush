@@ -19,6 +19,7 @@
 	import type { XRPCResponse } from '@atcute/client';
 	import { formatDistanceToNow } from "date-fns";
 	import { segmentize } from "@atcute/bluesky-richtext-segmenter";
+	import Video from './Video.svelte';
 
 	const {
 		post,
@@ -180,12 +181,7 @@
 						{:then { data }}
 							{@const embed: AppBskyEmbedVideo.View = (data.thread as any).post.embed}
 							{console.log(embed)}
-							<div class="flex w-full" style="aspect-ratio: {embed.aspectRatio?.width}/{embed.aspectRatio?.height}">
-								<video controls>
-									<source src={embed.playlist}>
-									
-								</video>
-							</div>
+							<Video {embed} />
 							
 						{/await}
 					{/if}
