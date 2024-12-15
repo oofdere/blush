@@ -1,18 +1,50 @@
-import { XRPC, CredentialManager } from '@atcute/client';
+import { XRPC, CredentialManager, type AtpSessionData } from '@atcute/client';
 import type { AppBskyFeedPost, AppBskyRichtextFacet, Brand } from '@atcute/client/lexicons';    
+import { SvelteMap } from 'svelte/reactivity';
+import * as devalue from 'devalue';
 
-export const manager = $state(new CredentialManager({ service: 'https://api.bsky.app' }));
+let accounts: SvelteMap<string, AtpSessionData> = new SvelteMap(JSON.parse(localStorage.getItem('accounts') || '[]'))
+$effect(() => {
+    console.log('persisting accounts!')
+    localStorage.setItem('accounts', devalue.stringify(Array.from(accounts.entries())))
+})
+export function getAccounts() { return accounts }
 
-console.log(manager)
+let currentAccount = $state(accounts.get(localStorage.getItem('currentAccount')!))
+$effect(() => {
+    console.log('persisting current account!')
+    localStorage.setItem('currentAccount', devalue.stringify(currentAccount?.did))
+})
+export function getCurrentAccount() { return currentAccount }
 
-// try {
-//     manager.login({ identifier: 'oof.dere.systems', password: 'vpt4-eivt-vdwu-dg6n' }).then((x) => console.log(x))
-// } catch (error) {
-//     console.log(error)
-// }
 
-// you can just change the login on the manager without new rpc!?
+export function setAccount(did: string | undefined) {
+    if (did) {
+        const session = accounts.get(did)
+        if (session) { currentAccount = session }
+    }
 
-console.log(manager)
+    currentAccount = undefined;
+}
+
+export const manager  = new CredentialManager({ service: 'https://api.bsky.app' });
+
+export const authedManager = new CredentialManager({service: 'https://bsky.social'})
+$effect(() => {
+    if (currentAccount) {
+        authedManager.resume(currentAccount).then(() => console.log("session resumed!"))
+    }
+})
+
+async function login(identifier: string, password: string) {
+    try {
+        const session = await manager.login({ identifier, password })
+        accounts.set(session.did, session)
+    } catch (e) {
+        
+    }
+    
+    
+}
 
 export const rpc = new XRPC({ handler: manager });
