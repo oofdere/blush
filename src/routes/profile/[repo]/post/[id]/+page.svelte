@@ -57,14 +57,11 @@
 
 	<div class="flex flex-col gap-2 border-slate-400 border-opacity-45 inse bg-cyan-950 px-6 ">
 		<div class="flex flex-col gap-4">
-			{#await data.post}
-		loading post
-	{:then thread}
-		<div class="-translate-y-4">
-			<Post post={thread.data.thread} profile={data.profile} showAuthor={false} />
 
+		<div class="-translate-y-4">
+			<Post post={data.post} profile={data.profile} showAuthor={false} />
 		</div>
-	{/await}
+
 		</div>
 	</div>
 </div>
