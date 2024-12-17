@@ -3,21 +3,30 @@
 	import Post from '$lib/components/Post.svelte';
 	import { tokenize } from '@atcute/bluesky-richtext-parser';
 	import { rpc } from '$lib/atcute.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
+	import type { AppBskyFeedDefs } from "@atcute/client/lexicons";
+	import { beforeNavigate } from '$app/navigation';
+	
+		let { data }: { data: PageData } = $props();
 
-	let { data }: { data: PageData } = $props();
+	let feed = $derived(data.feed.data)
 
-	let feed = $state(data.feed.data)
+	let addons: AppBskyFeedDefs.FeedViewPost[][] = $state([]) 
+	$inspect(addons)
 
 	let textsegments = $derived(tokenize(data.profile.description!) || [])
 
 	function loadMore() {
-		rpc.get('app.bsky.feed.getAuthorFeed', {params: { actor: $page.params.repo, includePins: false, filter: 'posts_no_replies', cursor: feed.cursor }}).then((x) => { 
+		rpc.get('app.bsky.feed.getAuthorFeed', {params: { actor: page.params.repo, includePins: false, filter: 'posts_no_replies', cursor: feed.cursor }}).then((x) => { 
 			console.log(x)
 			feed.cursor = x.data.cursor
-			feed.feed = feed.feed.concat(x.data.feed)
+			addons.push(x.data.feed)
 		})
 	}
+
+	beforeNavigate(() => {
+		addons = [];
+	})
 </script>
 
 <div class="min-h-screen md:h-screen w-screen bg-cyan-800 text-white md:flex">
@@ -70,18 +79,29 @@
 		{/if}
 	</div>
 </div>
-
+{#key page.url.pathname}
 	<div class="w-full h-full overflow-y-scroll flex flex-col gap-2 border-slate-400 border-opacity-45 inse bg-cyan-950 px-6 py-4 ">
 		<div class="flex flex-col gap-4">
-
-				{#each feed.feed as post}
+				
+				{#each feed.feed as post (post.reason?.$type + post.post.cid)}
 					<Post {post} profile={data.profile} showAuthor={data.profile.did !== post.post.author.did} />
 				{/each}
 
-				<button onclick={loadMore}>Load more</button>
+				{#each addons as page}
+					{#each page as post (post.reason?.$type + post.post.cid)}
+						<Post {post} profile={data.profile} showAuthor={data.profile.did !== post.post.author.did} />
+					{/each}
+				{/each}
 
+				{#if feed.cursor}
+					<button onclick={loadMore}>Load more</button>
+				{:else}
+					you reached the end!!
+				{/if}
 		</div>
 	</div>
+	{/key}
+
 </div>
 
 <style>
