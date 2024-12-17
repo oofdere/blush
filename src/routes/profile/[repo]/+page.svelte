@@ -1,26 +1,11 @@
 <script lang="ts">
-	import type { AppBskyEmbedImages, AppBskyFeedPost, Brand } from '@atcute/client/lexicons';
 	import type { PageData } from './$types';
-	import LucideRefreshCw from '~icons/lucide/refresh-cw';
-	import LucidePin from '~icons/lucide/pin';
-	import LucideHeart from '~icons/lucide/heart';
-	import LucideMessageSquare from '~icons/lucide/message-square';
-	import { onMount, type Component, type Snippet } from 'svelte';
-	import { rpc } from '$lib/atcute.svelte';
 	import Post from '$lib/components/Post.svelte';
-	import { formatDistanceToNow } from "date-fns";
-	import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 	import { tokenize } from '@atcute/bluesky-richtext-parser';
 
 	let { data }: { data: PageData } = $props();
 
-	const textsegments = tokenize(data.profile.description!) || []
-
-
-	type record = AppBskyFeedPost.Record;
-
-
-
+	let textsegments = $derived(tokenize(data.profile.description!) || [])
 </script>
 
 <div class="min-h-screen md:h-screen w-screen bg-cyan-800 text-white md:flex">
@@ -32,7 +17,6 @@
 				<div class="-gap-2 text-shadow flex flex-col">
 					<span class="text-2xl font-semibold">{data.profile.displayName}</span>
 					<span class="text-gray-400">@{data.profile.handle}</span>
-					<span>{formatDistanceToNow(new Date(data.profile.createdAt))} ago</span>
 				</div>
 			</div>
 		</div>
@@ -78,7 +62,7 @@
 	<div class="w-full h-full overflow-y-scroll flex flex-col gap-2 border-slate-400 border-opacity-45 inse bg-cyan-950 px-6 py-4 ">
 		<div class="flex flex-col gap-4">
 
-				{#each data.feed.data.feed as post}
+				{#each data.feed.data.feed as post (post.post.cid)}
 					<Post {post} profile={data.profile} showAuthor={data.profile.did !== post.post.author.did} />
 				{/each}
 

@@ -5,20 +5,17 @@
 		AppBskyEmbedImages,
 		AppBskyEmbedVideo,
 		AppBskyFeedDefs,
-		AppBskyFeedGetPostThread,
-		AppBskyFeedPost,
-		Brand
+		AppBskyFeedPost
 	} from '@atcute/client/lexicons';
 	import LucideRefreshCw from '~icons/lucide/refresh-cw';
 	import LucidePin from '~icons/lucide/pin';
 	import LucideHeart from '~icons/lucide/heart';
 	import LucideMessageSquare from '~icons/lucide/message-square';
-	import { onMount, type Component, type Snippet } from 'svelte';
+	import { type Component, type Snippet } from 'svelte';
 	import { rpc } from '$lib/atcute.svelte';
 	import Post from './Post.svelte';
-	import type { XRPCResponse } from '@atcute/client';
-	import { formatDistanceToNow } from "date-fns";
-	import { segmentize } from "@atcute/bluesky-richtext-segmenter";
+	import { formatDistanceToNow } from 'date-fns';
+	import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 	import Video from './Video.svelte';
 
 	const {
@@ -33,18 +30,81 @@
 
 	//const angle = Math.floor(Math.random() * (1 - -1) + -1);
 	const angle = 0;
-	const record = post.post.record as AppBskyFeedPost.Record;
+	const record = $derived(post.post.record as AppBskyFeedPost.Record);
 
-	const thread = rpc.get('app.bsky.feed.getPostThread', { params: { uri: post.post.uri } });
+	const thread = $derived(
+		rpc.get('app.bsky.feed.getPostThread', { params: { uri: post.post.uri } })
+	);
 
-	const date = formatDistanceToNow(record.createdAt) + " ago"
+	const date = $derived(formatDistanceToNow(record.createdAt) + ' ago');
 
-	const textsegments = segmentize(record.text, record.facets)
+	const textsegments = $derived(segmentize(record.text, record.facets));
 </script>
 
-<div style="transform:rotate({angle}deg)" class="text-white max-w-96">
-	{#if 'reason' in post}
-		{@const reason = post.reason!.$type}
+<svelte:boundary>
+	{#snippet failed(x)}
+		yeah uh, this post is le bad
+		{JSON.stringify(x)}
+		{JSON.stringify(post)}
+	{/snippet}
+	<div style="transform:rotate({angle}deg)" class="max-w-96 text-white">
+		{#if 'reason' in post}
+			{@render reason(post)}
+		{/if}
+
+		<a href="/profile/{post.post.author.did}/post/{post.post.uri.slice(-13)}">
+			<div
+				class=" rounded-lg border-2 border-slate-400 border-opacity-50 bg-cyan-950 shadow-md shadow-black"
+			>
+				{#if showAuthor}
+					{@render author()}
+				{/if}
+
+				{#if record.text}
+					{@render text()}
+				{/if}
+
+				{#if record.embed}
+					{@render embed()}
+				{:else}
+					{#if post.post.author.did === profile.did}
+						<div class="px-2 opacity-60">
+							{date}
+						</div>
+					{/if}
+					<div class="border-b-2 border-slate-400 border-opacity-50 pt-2"></div>
+				{/if}
+
+				{#snippet reaction(Icon: Component, count?: number)}
+					<svelte:boundary>
+						{#snippet failed()}
+							exploeded when rendering reaction
+						{/snippet}
+						<div class="flex items-center gap-2 p-2">
+							<Icon />
+							{count}
+						</div>
+					</svelte:boundary>
+				{/snippet}
+
+				<div class="flex divide-x-2 divide-slate-400 divide-opacity-50">
+					{@render reaction(LucideMessageSquare, post.post.replyCount)}
+					{@render reaction(LucideHeart, post.post.likeCount)}
+					{@render reaction(LucideRefreshCw, post.post.quoteCount! + post.post.repostCount!)}
+					<div></div>
+					<!-- for final divider line -->
+				</div>
+			</div>
+		</a>
+	</div>
+</svelte:boundary>
+
+{#snippet reason(post)}
+	{@const reason = post.reason!.$type}
+	<svelte:boundary>
+		{#snippet failed()}
+			post reason exploded
+		{/snippet}
 		<div class="flex items-center justify-center gap-2 p-2 pt-0 opacity-60">
 			{#if reason === 'app.bsky.feed.defs#reasonPin'}
 				<LucidePin />
@@ -55,84 +115,92 @@
 				<span>{profile.displayName}</span>
 			{/if}
 		</div>
-	{/if}
-	<a href="/profile/{post.post.author.did}/post/{post.post.uri.slice(-13)}">
-		<div
-			class=" rounded-lg border-2 border-slate-400 border-opacity-50 bg-cyan-950 shadow-md shadow-black"
+	</svelte:boundary>
+{/snippet}
+
+{#snippet author()}
+	<svelte:boundary>
+		{#snippet failed()}
+			author exploded
+		{/snippet}
+		<a
+			href="/profile/{post.post.author.did}"
+			class="flex items-center gap-2 border-b-2 border-slate-400 border-opacity-50"
 		>
-			{#if showAuthor}
-				<a
-					href="/profile/{post.post.author.did}"
-					class="flex items-center gap-2 border-b-2 border-slate-400 border-opacity-50"
-				>
-					<img class="w-12" src={post.post.author.avatar} alt="avatar" />
-					<div class="flex flex-col">
-						<span>
-							{post.post.author.displayName}
-						</span>
-						<span>
-							{date}
-						</span>
-					</div>
-				</a>
-			{/if}
+			<img class="w-12" src={post.post.author.avatar} alt="avatar" />
+			<div class="flex flex-col">
+				<span>
+					{post.post.author.displayName}
+				</span>
+				<span>
+					{date}
+				</span>
+			</div>
+		</a>
+	</svelte:boundary>
+{/snippet}
 
-			{#if record.text}
-				<div class="whitespace-pre-line border-slate-400 border-opacity-50 px-2 pt-2">
-					{#each textsegments as s}
-						{#if s.features}
-							{#each s.features as f}
-								<span class="text-green-400">
-									{#if f.$type === 'app.bsky.richtext.facet#link'}
-									<a href={f.uri}>{s.text}</a>
-								{:else if f.$type === 'app.bsky.richtext.facet#mention'}
-									<a href="/profile/{f.did}">{s.text}</a>
-								{:else if f.$type === 'app.bsky.richtext.facet#tag'}
-									#{f.tag}
-								{/if}
-								</span>
-								
-							{/each}
-						{:else}
-							{s.text}
+{#snippet text()}
+	<div class="whitespace-pre-line border-slate-400 border-opacity-50 px-2 pt-2">
+		{#each textsegments as s}
+			{#if s.features}
+				{#each s.features as f}
+					<span class="text-green-400">
+						{#if f.$type === 'app.bsky.richtext.facet#link'}
+							<a href={f.uri}>{s.text}</a>
+						{:else if f.$type === 'app.bsky.richtext.facet#mention'}
+							<a href="/profile/{f.did}">{s.text}</a>
+						{:else if f.$type === 'app.bsky.richtext.facet#tag'}
+							#{f.tag}
 						{/if}
-					{/each}
-				</div>
+					</span>
+				{/each}
+			{:else}
+				{s.text}
 			{/if}
+		{/each}
+	</div>
+{/snippet}
 
-			{#if record.embed}
-				{#if record.text}
-					<div
-						class="{record.embed.$type !== 'app.bsky.embed.record'
-							? 'border-b-2'
-							: ''} border-slate-400 border-opacity-50 pt-2"
-					></div>
-				{/if}
-				{@const embed = record.embed}
-				<div class="border-b-2 border-slate-400 border-opacity-50">
-					{#if embed.$type === 'app.bsky.embed.external'}
-						<a href={embed.external.uri}>
-							{#if embed.external.uri.includes('media.tenor.com')}
+{#snippet embed()}
+	<svelte:boundary>
+		{#if record.text}
+			<div
+				class="{record.embed.$type !== 'app.bsky.embed.record'
+					? 'border-b-2'
+					: ''} border-slate-400 border-opacity-50 pt-2"
+			></div>
+		{/if}
+		{#if true}
+			{@const embed = record.embed}
+			<div class="border-b-2 border-slate-400 border-opacity-50">
+				{#if embed.$type === 'app.bsky.embed.external'}
+					<a href={embed.external.uri}>
+						{#if embed.external.uri.includes('media.tenor.com')}
 							<div class="w-full bg-red-500">
 								<img src={embed.external.uri} class="w-full" />
 							</div>
-							{:else}
-								{#await thread}
-									loading . . .
-								{:then { data }}
-									{@const embed: AppBskyEmbedExternal.View = (data.thread as any).post.embed}
-									<img class="w-full" src={embed.external.thumb} />
-								{/await}
-								<div class="p-2">
-									<span class="font-bold">{embed.external.title}</span>
-									<span class="">{embed.external.description}</span>
-									<span class="font-mono">{embed.external.uri}</span>
-								</div>
-							{/if}
-						</a>
-					{/if}
+						{:else}
+							{#await thread}
+								loading . . .
+							{:then { data }}
+								{@const embed: AppBskyEmbedExternal.View = (data.thread as any).post.embed}
+								<img class="w-full" src={embed.external.thumb} />
+							{/await}
+							<div class="p-2">
+								<span class="font-bold">{embed.external.title}</span>
+								<span class="">{embed.external.description}</span>
+								<span class="font-mono">{embed.external.uri}</span>
+							</div>
+						{/if}
+					</a>
+				{/if}
 
-					{#if embed.$type === 'app.bsky.embed.images'}
+				{#if embed.$type === 'app.bsky.embed.images'}
+					<svelte:boundary>
+						{#snippet failed()}
+							fuck
+						{/snippet}
 						{#await thread}
 							{#each embed.images as image}
 								<div
@@ -145,10 +213,14 @@
 							loading . . .
 						{:then { data }}
 							{@const embed: AppBskyEmbedImages.View = (data.thread as any).post.embed}
-							<div class="flex w-full overflow-x-scroll snap-x snap-mandatory overflow-y-clip" style="aspect-ratio: {embed.images[0].aspectRatio?.width}/{embed.images[0].aspectRatio?.height}">
+							<div
+								class="flex w-full snap-x snap-mandatory overflow-y-clip overflow-x-scroll"
+								style="aspect-ratio: {embed.images[0].aspectRatio?.width}/{embed.images[0]
+									.aspectRatio?.height}"
+							>
 								{#each embed.images as image: ViewImage, key}
 									<div
-										class="w-full h-full flex items-center bg-black snap-start relative touch-manipulation"
+										class="relative flex h-full w-full touch-manipulation snap-start items-center bg-black"
 										style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}"
 									>
 										<img
@@ -159,77 +231,58 @@
 											alt={image.alt}
 										/>
 										{#if embed.images.length > 1}
-										<progress value={key + 1} max={embed.images.length} class="absolute top-0 w-full h-1 text-cyan-500"></progress>
+											<progress
+												value={key + 1}
+												max={embed.images.length}
+												class="absolute top-0 h-1 w-full text-cyan-500"
+											></progress>
 										{/if}
 									</div>
 								{/each}
 							</div>
-							
 						{/await}
-					{/if}
-
-					{#if embed.$type === 'app.bsky.embed.video'}
-						{#await thread}
-
-								<div
-									class="w-full bg-black"
-									style="aspect-ratio: {embed.aspectRatio?.width}/{embed.aspectRatio?.height}"
-								>
-								</div>
-
-							loading . . .
-						{:then { data }}
-							{@const embed: AppBskyEmbedVideo.View = (data.thread as any).post.embed}
-							{console.log(embed)}
-							<Video {embed} />
-							
-						{/await}
-					{/if}
-
-					{#if embed.$type === 'app.bsky.embed.record' || embed.$type === 'app.bsky.embed.recordWithMedia'}
-						{@const e = rpc.get('app.bsky.feed.getPostThread', {
-							params: { uri: embed.record.uri || embed.record.record.uri }
-						})}
-						{#await e}
-							add a skeleton here at some point
-						{:then { data }}
-							<div class="p-4">
-								{#if data.thread.$type === 'app.bsky.feed.defs#threadViewPost'}
-									<Post post={data.thread} profile={data.thread.post.author} showAuthor={true} />
-								{/if}
-							</div>
-						{/await}
-					{/if}
-				</div>
-				{#if post.post.author.did === profile.did}
-					<div class="px-2 py-1 opacity-60">
-						{date}
-					</div>
-					<div class="border-b-2 border-slate-400 border-opacity-50"></div>
+					</svelte:boundary>
 				{/if}
-			{:else}
-				{#if post.post.author.did === profile.did}
-					<div class="px-2 opacity-60">
-						{date}
-					</div>
+
+				{#if embed.$type === 'app.bsky.embed.video'}
+					{#await thread}
+						<div
+							class="w-full bg-black"
+							style="aspect-ratio: {embed.aspectRatio?.width}/{embed.aspectRatio?.height}"
+						></div>
+
+						loading . . .
+					{:then { data }}
+						{@const embed: AppBskyEmbedVideo.View = (data.thread as any).post.embed}
+						{console.log(embed)}
+						<Video {embed} />
+					{/await}
 				{/if}
-				<div class="border-b-2 border-slate-400 border-opacity-50 pt-2"></div>
-			{/if}
 
-			{#snippet reaction(Icon: Component, count?: number)}
-				<div class="flex items-center gap-2 p-2">
-					<Icon />
-					{count}
-				</div>
-			{/snippet}
-
-			<div class="flex divide-x-2 divide-slate-400 divide-opacity-50">
-				{@render reaction(LucideMessageSquare, post.post.replyCount)}
-				{@render reaction(LucideHeart, post.post.likeCount)}
-				{@render reaction(LucideRefreshCw, post.post.quoteCount! + post.post.repostCount!)}
-				<div></div>
-				<!-- for final divider line -->
+				{#if embed.$type === 'app.bsky.embed.record' || embed.$type === 'app.bsky.embed.recordWithMedia'}
+					{@const e = rpc.get('app.bsky.feed.getPostThread', {
+						params: { uri: embed.record.uri || embed.record.record.uri }
+					})}
+					{#await e}
+						add a skeleton here at some point
+					{:then { data }}
+						<div class="p-4">
+							{#if data.thread.$type === 'app.bsky.feed.defs#threadViewPost'}
+								<Post post={data.thread} profile={data.thread.post.author} showAuthor={true} />
+							{/if}
+						</div>
+					{/await}
+				{/if}
 			</div>
-		</div>
-	</a>
-</div>
+			{#if post.post.author.did === profile.did}
+				<div class="px-2 py-1 opacity-60">
+					{date}
+				</div>
+				<div class="border-b-2 border-slate-400 border-opacity-50"></div>
+			{/if}
+		{/if}
+		{#snippet failed()}
+			exploded when rendering embed
+		{/snippet}
+	</svelte:boundary>
+{/snippet}

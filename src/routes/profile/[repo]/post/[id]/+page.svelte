@@ -1,27 +1,8 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import Post from '$lib/components/Post.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
-
-	type Blob = {
-		$type: 'blob';
-		ref: {
-			$link: string;
-		};
-		mimeType: string;
-		size: number;
-	};
-
-	type Image = {
-		alt?: string;
-		aspectRatio: {
-			height: number;
-			width: number;
-		};
-		image: Blob;
-	};
 </script>
 
 <div class="min-h-screen w-screen flex-col bg-cyan-950 text-white">
