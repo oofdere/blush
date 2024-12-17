@@ -10,7 +10,13 @@ export const load: PageLoad = async ({ params, parent }) => {
 		throw error(404);
 	}
 
+	const meta = {
+		title: `post by ${data.thread.post.author.displayName} (@${data.thread.post.author.handle})`,
+		description: `${(data.thread.post.record as any).text}`
+	}
+
 	return {
 		post: data.thread,
+		meta
 	};
 };
