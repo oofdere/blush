@@ -17,12 +17,9 @@
 <!--<QueryClientProvider client={queryClient}><ParaglideJS {i18n}>-->
 
 <div class="main flex flex-col">
-			<svelte:boundary>
+
 				{@render children()}
-				{#snippet failed(x)}
-					{JSON.stringify(x)}
-				{/snippet}
-			</svelte:boundary>
+
 </div>
 
 <div class="sticky w-screen bottom-0 text-white bg-cyan-800 flex flex-col md:hidden">

@@ -2,10 +2,22 @@
 	import type { PageData } from './$types';
 	import Post from '$lib/components/Post.svelte';
 	import { tokenize } from '@atcute/bluesky-richtext-parser';
+	import { rpc } from '$lib/atcute.svelte';
+	import { page } from '$app/stores';
 
 	let { data }: { data: PageData } = $props();
 
+	let feed = $state(data.feed.data)
+
 	let textsegments = $derived(tokenize(data.profile.description!) || [])
+
+	function loadMore() {
+		rpc.get('app.bsky.feed.getAuthorFeed', {params: { actor: $page.params.repo, includePins: false, filter: 'posts_no_replies', cursor: feed.cursor }}).then((x) => { 
+			console.log(x)
+			feed.cursor = x.data.cursor
+			feed.feed = feed.feed.concat(x.data.feed)
+		})
+	}
 </script>
 
 <div class="min-h-screen md:h-screen w-screen bg-cyan-800 text-white md:flex">
@@ -62,9 +74,11 @@
 	<div class="w-full h-full overflow-y-scroll flex flex-col gap-2 border-slate-400 border-opacity-45 inse bg-cyan-950 px-6 py-4 ">
 		<div class="flex flex-col gap-4">
 
-				{#each data.feed.data.feed as post (post.post.cid)}
+				{#each feed.feed as post}
 					<Post {post} profile={data.profile} showAuthor={data.profile.did !== post.post.author.did} />
 				{/each}
+
+				<button onclick={loadMore}>Load more</button>
 
 		</div>
 	</div>
