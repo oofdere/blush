@@ -13,9 +13,9 @@ export const load: LayoutLoad = async ({ params }) => {
             first_name: profile.data.displayName,
             username: profile.data.handle
         },
-        image: {
+        image: [{
             src: profile.data.avatar
-        }
+        }]
 	}
 
     return {

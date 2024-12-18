@@ -41,6 +41,7 @@
 		"@atcute/bluesky-richtext-segmenter": "^1.0.5",
 		"@atcute/client": "^2.0.6",
 		"@inlang/paraglide-sveltekit": "^0.11.5",
+		"@nanostores/query": "^0.3.4",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/forms": "^0.5.9",
@@ -48,8 +49,10 @@
 		"@tanstack/svelte-query": "^5.62.8",
 		"@tanstack/svelte-query-devtools": "^5.62.8",
 		"color.js": "^1.2.0",
+		"crabrave": "^1.0.0",
 		"date-fns": "^4.1.0",
 		"devalue": "^5.1.1",
-		"hls.js": "^1.5.18"
+		"hls.js": "^1.5.18",
+		"nanostores": "^0.11.3"
 	}
 }

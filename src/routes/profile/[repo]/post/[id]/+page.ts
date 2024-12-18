@@ -2,7 +2,23 @@ import { rpc } from '$lib/atcute.svelte';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import type { Meta } from '$lib';
-import type { AppBskyFeedPost } from '@atcute/client/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
+
+const metaImages = (post: AppBskyFeedDefs.ThreadViewPost): Meta["image"] => {
+	if (post.post.embed?.$type === 'app.bsky.embed.images#view') {
+		return post.post.embed.images.map((x) => { return {src: x.fullsize} })
+	}
+	return []
+}
+
+const metaVideo = (post: AppBskyFeedDefs.ThreadViewPost): Meta["video"] => {
+	if (post.post.embed?.$type === 'app.bsky.embed.video#view') {
+		return {
+			src: post.post.embed.playlist
+		}
+	}
+	return undefined
+}
 
 export const load: PageLoad = async ({ params, parent }) => {
 
@@ -22,6 +38,8 @@ export const load: PageLoad = async ({ params, parent }) => {
 		article: {
 			published_time: (data.thread.post.record as any).createdAt
 		},
+		image: metaImages(data.thread),
+		video: metaVideo(data.thread)
 	}
 
 	return {
@@ -29,3 +47,4 @@ export const load: PageLoad = async ({ params, parent }) => {
 		meta
 	};
 };
+ 

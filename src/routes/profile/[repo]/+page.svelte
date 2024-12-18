@@ -27,6 +27,8 @@
 	beforeNavigate(() => {
 		addons = [];
 	})
+
+	
 </script>
 
 <div class="min-h-screen md:h-screen w-screen bg-cyan-800 text-white md:flex">

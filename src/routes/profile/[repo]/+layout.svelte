@@ -22,7 +22,9 @@
         {/if}
 
         {#if meta.image}
-            <meta property="og:image" content={meta.image.src} />
+            {#each meta.image as image}
+                <meta property="og:image" content={image.src} />
+            {/each}
         {/if}
 
         {#if meta.type}
@@ -43,7 +45,13 @@
             <meta property="profile:first_name" content={meta.profile.username}>
         {/if}
 
+        {#if meta.video}
+            <meta property="og:video" content={meta.video.src} />
+            <meta name="twitter:player:stream" content="{meta.video.src}" />
+        {/if}
+
         <meta property="og:site_name" content="dere.social">
+        <meta property="theme-color" content="#155E75">
     {/if}
 </svelte:head>
 
