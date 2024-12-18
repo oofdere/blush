@@ -22,7 +22,7 @@ const metaVideo = (post: AppBskyFeedDefs.ThreadViewPost): Meta["video"] => {
 
 export const load: PageLoad = async ({ params, parent }) => {
 
-	const { data } = await rpc.get('app.bsky.feed.getPostThread', {params: {uri: `at://${params.repo}/app.bsky.feed.post/${params.id}`}})
+	const { data } = await rpc.get('app.bsky.feed.getPostThread', {params: {uri: `at://${params.repo}/app.bsky.feed.post/${params.id.replace('||', '')}`}})
 
 	if (data.thread.$type !== 'app.bsky.feed.defs#threadViewPost') {
 		throw error(404);
