@@ -1,28 +1,33 @@
-import { rpc } from '$lib/atcute';
+import { atp } from '$lib/atcute';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import type { Meta } from '$lib';
 import type { AppBskyFeedDefs } from '@atcute/client/lexicons';
 
-const metaImages = (post: AppBskyFeedDefs.ThreadViewPost): Meta["image"] => {
+const metaImages = (post: AppBskyFeedDefs.ThreadViewPost): Meta['image'] => {
 	if (post.post.embed?.$type === 'app.bsky.embed.images#view') {
-		return post.post.embed.images.map((x) => { return {src: x.fullsize} })
+		return post.post.embed.images.map((x) => {
+			return { src: x.fullsize };
+		});
 	}
-	return []
-}
+	return [];
+};
 
-const metaVideo = (post: AppBskyFeedDefs.ThreadViewPost): Meta["video"] => {
+const metaVideo = (post: AppBskyFeedDefs.ThreadViewPost): Meta['video'] => {
 	if (post.post.embed?.$type === 'app.bsky.embed.video#view') {
 		return {
 			src: post.post.embed.playlist
-		}
+		};
 	}
-	return undefined
-}
+	return undefined;
+};
 
 export const load: PageLoad = async ({ params, parent }) => {
+	const { rpc, manager } = atp();
 
-	const { data } = await rpc.get('app.bsky.feed.getPostThread', {params: {uri: `at://${params.repo}/app.bsky.feed.post/${params.id.replace('||', '')}`}})
+	const { data } = await rpc.get('app.bsky.feed.getPostThread', {
+		params: { uri: `at://${params.repo}/app.bsky.feed.post/${params.id.replace('||', '')}` }
+	});
 
 	if (data.thread.$type !== 'app.bsky.feed.defs#threadViewPost') {
 		throw error(404);
@@ -40,11 +45,10 @@ export const load: PageLoad = async ({ params, parent }) => {
 		},
 		image: metaImages(data.thread),
 		video: metaVideo(data.thread)
-	}
+	};
 
 	return {
 		post: data.thread,
 		meta
 	};
 };
- 

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { goto, invalidateAll } from "$app/navigation";
-    import { authedManager, manager, $session as session } from "$lib/atcute";
+	import { goto } from "$app/navigation";
+    import { authedManager, $session as session } from "$lib/atcute";
     import * as devalue from 'devalue';
 
     if ($session) {

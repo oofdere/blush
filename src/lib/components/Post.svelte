@@ -42,7 +42,7 @@
 </script>
 
 <svelte:boundary>
-	{JSON.stringify(post.post.labels)}
+	{JSON.stringify(post.post.viewer)}
 	{#snippet failed(x)}
 		yeah uh, this post is le bad
 		{JSON.stringify(x)}
@@ -76,12 +76,12 @@
 					<div class="border-b-2 border-slate-400 border-opacity-50 pt-2"></div>
 				{/if}
 
-				{#snippet reaction(Icon: Component, count?: number)}
+				{#snippet reaction(Icon: Component, count?: number, active?: boolean)}
 					<svelte:boundary>
 						{#snippet failed()}
 							exploeded when rendering reaction
 						{/snippet}
-						<div class="flex items-center gap-2 p-2">
+						<div class="flex items-center gap-2 p-2  {active ? 'bg-white text-cyan-950' : ''}">
 							<Icon />
 							{count}
 						</div>
@@ -90,8 +90,8 @@
 
 				<div class="flex divide-x-2 divide-slate-400 divide-opacity-50">
 					{@render reaction(LucideMessageSquare, post.post.replyCount)}
-					{@render reaction(LucideHeart, post.post.likeCount)}
-					{@render reaction(LucideRefreshCw, post.post.quoteCount! + post.post.repostCount!)}
+					{@render reaction(LucideHeart, post.post.likeCount, !!post.post.viewer?.like)}
+					{@render reaction(LucideRefreshCw, post.post.quoteCount! + post.post.repostCount!, !!post.post.viewer?.repost)}
 					<div></div>
 					<!-- for final divider line -->
 				</div>
