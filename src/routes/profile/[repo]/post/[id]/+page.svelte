@@ -8,7 +8,7 @@
 <div class="min-h-screen w-screen flex-col bg-cyan-950 text-white">
 	{#await data.profile then profile}
 	<a href="/profile/{profile.did}" class="bg-slate-800">
-		<div class="header h-48 bg-cover text-white" style:--bg-url={`url('${profile.banner}')`}>
+		<div class="header h-48 bg-cover text-white" style:--bg-url={data.profile.banner ? `url('${data.profile.banner}')` : ''}>
 			<div class="flex items-center gap-3 p-6 pb-10 pt-16">
 				<img src={profile.avatar} class="avatar w-20 rounded-xl" alt="avatar" />
 				<div class="-gap-2 text-shadow flex flex-col">

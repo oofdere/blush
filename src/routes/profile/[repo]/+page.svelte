@@ -29,13 +29,13 @@
 		addons = [];
 	})
 
-	
+	$inspect(data)
 </script>
 
 <div class="min-h-screen md:h-screen w-screen bg-cyan-800 text-white md:flex">
-	<div class="h-full w-full overflow-y-scroll">
+	<div class="h-full overflow-y-scroll">
 		<div class="bg-slate-800 top-0 z-10">
-		<div class="header h-48 bg-cover text-white" style:aspect-ratio="818/272" style:--bg-url={`url('${data.profile.banner}')`}>
+		<div class="header h-48 bg-cover text-white" style:aspect-ratio="818/272" style:--bg-url={data.profile.banner ? `url('${data.profile.banner}')` : ''}>
 			<div class="flex items-center gap-3 p-6 pb-10 pt-16">
 				<img src={data.profile.avatar} class="avatar w-20 rounded-xl" alt="avatar" />
 				<div class="-gap-2 text-shadow flex flex-col">

@@ -17,6 +17,8 @@
 	import { formatDistanceToNow } from 'date-fns';
 	import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 	import Video from './Video.svelte';
+	import { goto } from '$app/navigation';
+	import Images from './Images.svelte';
 
 	const {
 		post,
@@ -28,8 +30,8 @@
 		showAuthor: boolean;
 	} = $props();
 
-	//const angle = Math.floor(Math.random() * (1 - -1) + -1);
-	const angle = 0;
+	const angle = Math.floor(Math.random() * (1 - -1) + -1);
+
 	const record = $derived(post.post.record as AppBskyFeedPost.Record);
 
 	const thread = $derived(
@@ -39,21 +41,21 @@
 	const date = $derived(formatDistanceToNow(record.createdAt) + ' ago');
 
 	const textsegments = $derived(segmentize(record.text, record.facets));
+
 </script>
 
 <svelte:boundary>
-	{JSON.stringify(post.post.viewer)}
 	{#snippet failed(x)}
 		yeah uh, this post is le bad
 		{JSON.stringify(x)}
 		{JSON.stringify(post)}
 	{/snippet}
-	<div style="transform:rotate({angle}deg)" class="max-w-96 text-white">
+	<button onclick={() => goto(`/profile/${post.post.author.did}/post/${post.post.uri.slice(-13)}`)} style="transform:rotate({angle}deg)" class="max-w-96 text-white">
 		{#if 'reason' in post}
 			{@render reason(post)}
 		{/if}
 
-		<a href="/profile/{post.post.author.did}/post/{post.post.uri.slice(-13)}">
+		<div class="text-left">
 			<div
 				class=" rounded-lg border-2 border-slate-400 border-opacity-50 bg-cyan-950 shadow-md shadow-black"
 			>
@@ -96,8 +98,8 @@
 					<!-- for final divider line -->
 				</div>
 			</div>
-		</a>
-	</div>
+		</div>
+	</button>
 </svelte:boundary>
 
 {#snippet reason(post)}
@@ -172,7 +174,7 @@
 					: ''} border-slate-400 border-opacity-50 pt-2"
 			></div>
 		{/if}
-		{#if true}
+		{#if record.embed}
 			{@const embed = record.embed}
 			<div class="border-b-2 border-slate-400 border-opacity-50">
 				{#if embed.$type === 'app.bsky.embed.external'}
@@ -198,51 +200,7 @@
 				{/if}
 
 				{#if embed.$type === 'app.bsky.embed.images'}
-					<svelte:boundary>
-						{#snippet failed()}
-							fuck
-						{/snippet}
-						{#await thread}
-							{#each embed.images as image}
-								<div
-									class="w-full bg-black"
-									style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}"
-								>
-									<div>{image.alt}</div>
-								</div>
-							{/each}
-							loading . . .
-						{:then { data }}
-							{@const embed: AppBskyEmbedImages.View = (data.thread as any).post.embed}
-							<div
-								class="flex w-full snap-x snap-mandatory overflow-y-clip overflow-x-scroll"
-								style="aspect-ratio: {embed.images[0].aspectRatio?.width}/{embed.images[0]
-									.aspectRatio?.height}"
-							>
-								{#each embed.images as image: ViewImage, key}
-									<div
-										class="relative flex h-full w-full touch-manipulation snap-start items-center bg-black"
-										style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}"
-									>
-										<img
-											class="w-full"
-											width={image.aspectRatio?.width}
-											height={image.aspectRatio?.height}
-											src={image.fullsize}
-											alt={image.alt}
-										/>
-										{#if embed.images.length > 1}
-											<progress
-												value={key + 1}
-												max={embed.images.length}
-												class="absolute top-0 h-1 w-full text-cyan-500"
-											></progress>
-										{/if}
-									</div>
-								{/each}
-							</div>
-						{/await}
-					</svelte:boundary>
+				<Images skeleton={embed} {thread} />
 				{/if}
 
 				{#if embed.$type === 'app.bsky.embed.video'}
