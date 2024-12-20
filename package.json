@@ -43,6 +43,7 @@
 		"@inlang/paraglide-sveltekit": "^0.11.5",
 		"@nanostores/persistent": "^0.10.2",
 		"@nanostores/query": "^0.3.4",
+		"@sveltejs/adapter-node": "^5.2.11",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/forms": "^0.5.9",
