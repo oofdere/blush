@@ -2,7 +2,7 @@
 	import type { PageData } from './$types';
 	import Post from '$lib/components/Post.svelte';
 	import { tokenize } from '@atcute/bluesky-richtext-parser';
-	import { rpc } from '$lib/atcute.svelte';
+	import { rpc } from '$lib/atcute';
 	import { page } from '$app/state';
 	import type { AppBskyFeedDefs } from "@atcute/client/lexicons";
 	import { beforeNavigate } from '$app/navigation';

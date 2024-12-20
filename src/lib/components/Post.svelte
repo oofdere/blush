@@ -12,7 +12,7 @@
 	import LucideHeart from '~icons/lucide/heart';
 	import LucideMessageSquare from '~icons/lucide/message-square';
 	import { type Component, type Snippet } from 'svelte';
-	import { rpc } from '$lib/atcute.svelte';
+	import { rpc } from '$lib/atcute';
 	import Post from './Post.svelte';
 	import { formatDistanceToNow } from 'date-fns';
 	import { segmentize } from '@atcute/bluesky-richtext-segmenter';
@@ -42,6 +42,7 @@
 </script>
 
 <svelte:boundary>
+	{JSON.stringify(post.post.labels)}
 	{#snippet failed(x)}
 		yeah uh, this post is le bad
 		{JSON.stringify(x)}

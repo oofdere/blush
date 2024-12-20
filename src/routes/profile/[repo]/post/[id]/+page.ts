@@ -1,4 +1,4 @@
-import { rpc } from '$lib/atcute.svelte';
+import { rpc } from '$lib/atcute';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import type { Meta } from '$lib';

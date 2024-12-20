@@ -41,6 +41,7 @@
 		"@atcute/bluesky-richtext-segmenter": "^1.0.5",
 		"@atcute/client": "^2.0.6",
 		"@inlang/paraglide-sveltekit": "^0.11.5",
+		"@nanostores/persistent": "^0.10.2",
 		"@nanostores/query": "^0.3.4",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/container-queries": "^0.1.1",

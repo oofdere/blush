@@ -1,4 +1,4 @@
-import { rpc } from '$lib/atcute.svelte';
+import { rpc } from '$lib/atcute';
 import type { PageLoad } from './$types';
 import type { AppBskyFeedGetAuthorFeed } from '@atcute/client/lexicons';
 import { type XRPCResponse } from '@atcute/client';

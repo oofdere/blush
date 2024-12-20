@@ -1,5 +1,5 @@
 import type { Meta } from '$lib';
-import { rpc } from '$lib/atcute.svelte';
+import { rpc } from '$lib/atcute';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async ({ params }) => {

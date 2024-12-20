@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { manager } from '$lib/atcute.svelte';
+	import { authedManager, manager } from '$lib/atcute';
+	import { $session as session } from "$lib/atcute";
 	//import { i18n } from '$lib/i18n';
 	//import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	//import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
@@ -8,6 +9,7 @@
 	import '../app.css';
 
 	import LucidePlus from '~icons/lucide/plus'
+	import type { Snapshot } from './$types';
 
 	let { children } = $props();
 
@@ -35,12 +37,19 @@
 				<LucidePlus class="size-10" />
 			</div>
 		</a>
-
-		<a href="/profile/{manager.session?.did}" class="w-full text-center flex items-center justify-center">
-			<div class="size-16 rounded-lg bg-red-500 outline-8 outline outline-cyan-950 -translate-y-4">
-				me!
-			</div>
-		</a>
+		{#if $session}
+			<a href="/profile/{authedManager.session?.did}" class="w-full text-center flex items-center justify-center">
+				<div class="size-16 rounded-lg bg-red-500 outline-8 outline outline-cyan-950 -translate-y-4">
+					me!
+				</div>
+			</a>
+		{:else}
+			<a href="/login" class="w-full text-center flex items-center justify-center">
+				<div class="size-16 rounded-lg bg-red-500 outline-8 outline outline-cyan-950 -translate-y-4">
+					log in
+				</div>
+			</a>
+		{/if}
 	</div>
 	
 
