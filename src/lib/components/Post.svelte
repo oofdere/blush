@@ -213,8 +213,8 @@
 						loading . . .
 					{:then { data }}
 						{@const embed: AppBskyEmbedVideo.View = (data.thread as any).post.embed}
-						{console.log(embed)}
-						<Video {embed} />
+						{console.log(data)}
+						<Video thread={data} />
 					{/await}
 				{/if}
 
