@@ -7,7 +7,10 @@ import { resolveHandle } from '$lib/plc-directory';
 import { browser } from '$app/environment';
 
 const metaImages = (post: AppBskyFeedDefs.ThreadViewPost): Meta['image'] => {
-	if (post.post.embed?.$type === 'app.bsky.embed.images#view') {
+	if (post.post.embed?.$type === 'app.bsky.embed.video#view') {
+		return [{ src: post.post.embed.thumbnail }]
+	}
+	else if (post.post.embed?.$type === 'app.bsky.embed.images#view') {
 		return post.post.embed.images.map((x) => {
 			return { src: x.fullsize };
 		});
@@ -22,7 +25,7 @@ const metaVideo = async (post: AppBskyFeedDefs.ThreadViewPost): Promise<Meta['vi
 
             const did = (post.post.author.did as `did:${string}`)
             const pds = await resolveHandle(did)
-            return { src: `${pds}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${post.post.embed.cid}&r=8` }
+            return { src: `${pds}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${post.post.embed.cid}&r=8`, height: post.post.embed.aspectRatio?.height || 0, width: post.post.embed.aspectRatio?.width || 0 }
         }
 
 	return undefined;

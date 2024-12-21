@@ -18,7 +18,7 @@ export type Meta = {
     }[],
     video?: {
         src: string,
-        width?: number,
-        height?: number
+        width: number,
+        height: number
     }
 }

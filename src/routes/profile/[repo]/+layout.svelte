@@ -28,7 +28,7 @@
         {/if}
 
         {#if meta.type}
-            <meta property="og:type" content={meta.type}>
+            <meta property="og:type" content="{meta.type}">
         {/if}
 
         {#if meta.article}
@@ -48,7 +48,9 @@
         {#if meta.video}
             <meta property="og:video" content={meta.video.src} />
             <meta property="og:video:type" content="video/mp4" />
-            <meta name="twitter:player:stream" content="{meta.video.src}" />
+            <meta property="og:video" content={meta.video.width} />
+            <meta property="og:video" content={meta.video.height} />
+
         {/if}
 
         <meta property="og:site_name" content="dere.social">
