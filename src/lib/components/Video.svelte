@@ -8,7 +8,7 @@
     const embed: AppBskyEmbedVideo.View = $derived((thread.thread as any).post.embed)
     let video: HTMLVideoElement | undefined = $state();
     let error: string | undefined = $state();
-    const hls = video.canPlayType('application/vnd.apple.mpegurl');
+    const hls = video?.canPlayType('application/vnd.apple.mpegurl');
 
     onMount(() => {
         if (!video) return;
