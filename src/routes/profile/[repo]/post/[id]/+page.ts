@@ -53,6 +53,7 @@ export const load: PageLoad = async ({ params, parent }) => {
 			published_time: (data.thread.post.record as any).createdAt
 		},
 		image: metaImages(data.thread),
+		type: 'video.other',
 		video: browser ? await metaVideo(data.thread) : undefined
 	};
 

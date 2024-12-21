@@ -32,7 +32,11 @@
         {/if}
 
         {#if meta.article}
-            <meta property="og:type" content="article">
+            {#if meta.video}
+                <meta property="og:type" content="video.other">
+            {:else}
+                <meta property="og:type" content="article">
+            {/if}
             <meta property="article:published_time" content={meta.article.published_time}>
             <meta property="twitter:card" content="summary_large_image" />            
         {/if}
@@ -47,9 +51,8 @@
 
         {#if meta.video}
             <meta property="og:video" content={meta.video.src} />
-            <meta property="og:video:type" content="video/mp4" />
-            <meta property="og:video" content={meta.video.width} />
-            <meta property="og:video" content={meta.video.height} />
+            <meta property="og:video:width" content="{meta.video.width}" />
+            <meta property="og:video:height" content="{meta.video.height}" />
 
         {/if}
 
