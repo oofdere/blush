@@ -31,10 +31,10 @@
 					>
 					{#if resolved}
 						<img
-							class="w-full"
+							class="w-full h-full"
 							width={image.aspectRatio?.width}
 							height={image.aspectRatio?.height}
-							src={resolved.images[key].fullsize}
+							src={resolved.images[key].thumb}
 							alt={image.alt}
 						/>
 					{/if}
