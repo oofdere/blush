@@ -22,7 +22,7 @@ const metaVideo = async (post: AppBskyFeedDefs.ThreadViewPost): Promise<Meta['vi
 
             const did = (post.post.author.did as `did:${string}`)
             const pds = await resolveHandle(did)
-            return { src: `${pds}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${post.post.embed.cid}` }
+            return { src: `${pds}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${post.post.embed.cid}&r=8` }
         }
 
 	return undefined;

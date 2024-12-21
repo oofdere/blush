@@ -47,6 +47,7 @@
 
         {#if meta.video}
             <meta property="og:video" content={meta.video.src} />
+            <meta property="og:video:type" content="video/mp4" />
             <meta name="twitter:player:stream" content="{meta.video.src}" />
         {/if}
 
