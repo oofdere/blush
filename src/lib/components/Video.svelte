@@ -8,11 +8,12 @@
     const embed: AppBskyEmbedVideo.View = $derived((thread.thread as any).post.embed)
     let video: HTMLVideoElement | undefined = $state();
     let error: string | undefined = $state();
+    const hls = video.canPlayType('application/vnd.apple.mpegurl');
 
     onMount(() => {
         if (!video) return;
 
-        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        if (hls) {
             video.src = embed.playlist;
         } else {
             const did = (thread.thread.post.author.did as `did:${string}`)
@@ -30,6 +31,7 @@
         </div>
     {:else}
         <video 
+	    type={hls ? 'application/vnd.apple.mpegurl' : 'video/mp4'}
             bind:this={video} 
             controls 
             poster={embed.thumbnail}
