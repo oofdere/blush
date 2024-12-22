@@ -34,11 +34,12 @@
         {#if meta.article}
             {#if meta.video}
                 <meta property="og:type" content="video.other">
+                <meta property="twitter:card" content="player"/>
             {:else}
                 <meta property="og:type" content="article">
+                <meta property="twitter:card" content="summary_large_image" />  
             {/if}
             <meta property="article:published_time" content={meta.article.published_time}>
-            <meta property="twitter:card" content="summary_large_image" />            
         {/if}
 
         {#if meta.profile}
@@ -54,6 +55,17 @@
             <meta property="og:video:width" content="{meta.video.width}" />
             <meta property="og:video:height" content="{meta.video.height}" />
 
+            <meta property="twitter:player:height" content="{meta.video.height}"/>
+            <meta property="twitter:player:width" content="{meta.video.width}"/>
+            <meta property="og:video:height" content="{meta.video.height}"/>
+            <meta property="og:video:width" content="{meta.video.width}"/>
+
+            <meta property="twitter:player:stream" content="{meta.video.src}"/>
+            <meta property="og:video" content="{meta.video.src}"/>
+            <meta property="og:video:secure_url" content="{meta.video.src}"/>
+
+            <meta property="twitter:player:stream:content_type" content="video/mp4"/>
+            <meta property="og:video:type" content="video/mp4"/>
         {/if}
 
         <meta property="og:site_name" content="dere.social">
