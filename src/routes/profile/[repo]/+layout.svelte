@@ -27,10 +27,6 @@
             {/each}
         {/if}
 
-        {#if meta.type}
-            <meta property="og:type" content="{meta.type}">
-        {/if}
-
         {#if meta.article}
             {#if meta.video}
                 <meta property="og:type" content="video.other">
@@ -44,10 +40,10 @@
 
         {#if meta.profile}
             {#if !meta.article}
-            <meta property="og:type" content="profile">
+            	<meta property="og:type" content="profile">
             {/if}
             <meta property="profile:first_name" content={meta.profile.first_name}>
-            <meta property="profile:first_name" content={meta.profile.username}>
+            <meta property="profile:username" content={meta.profile.username}>
         {/if}
 
         {#if meta.video}
