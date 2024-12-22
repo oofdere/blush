@@ -22,3 +22,5 @@ export type Meta = {
         height: number
     }
 }
+
+export const baseurl = "https://dere.social"

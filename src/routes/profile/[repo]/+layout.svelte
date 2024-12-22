@@ -1,7 +1,7 @@
 <script lang="ts">
     const { children } = $props()
     import { page } from "$app/state";
-	import type { Meta } from "$lib";
+	import { type Meta, baseurl } from "$lib";
 
     const meta: Meta = page.data.meta
 </script>
@@ -13,7 +13,7 @@
         <meta name="description" content={page.data.meta.description || ''}>
         <meta property="og:description" content={page.data.meta.description || ''}>
 
-        <meta property="og:url" content="https://blush-production.up.railway.app{page.url.pathname}" />
+        <meta property="og:url" content="{baseurl}{page.url.pathname}" />
 
 
         {#if meta.image}
