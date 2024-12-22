@@ -33,9 +33,9 @@
                 <meta property="twitter:card" content="player"/>
             {:else}
                 <meta property="og:type" content="article">
-                <meta property="twitter:card" content="summary_large_image" />  
+                <meta property="twitter:card" content="summary_large_image" />
+		<meta property="article:published_time" content={meta.article.published_time}>
             {/if}
-            <meta property="article:published_time" content={meta.article.published_time}>
         {/if}
 
         {#if meta.profile}
