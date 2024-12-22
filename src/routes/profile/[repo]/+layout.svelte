@@ -17,9 +17,9 @@
             <meta property="og:description" content={page.data.meta.description}>
         {/if}
 
-        {#if meta.url}
-            <meta property="og:url" content="https://www.imdb.com/title/tt0117500/" />
-        {/if}
+
+        <meta property="og:url" content="https://blush-production.up.railway.app{page.url.pathname}" />
+
 
         {#if meta.image}
             {#each meta.image as image}
