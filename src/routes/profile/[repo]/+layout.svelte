@@ -12,11 +12,8 @@
         <title>{meta.title || "dere.social"}</title>
         <meta property="og:title" content={meta.title || "dere.social"}>
         
-        {#if meta.description}
-            <meta name="description" content={page.data.meta.description}>
-            <meta property="og:description" content={page.data.meta.description}>
-        {/if}
-
+        <meta name="description" content={page.data.meta.description || ''}>
+        <meta property="og:description" content={page.data.meta.description || ''}>
 
         <meta property="og:url" content="https://blush-production.up.railway.app{page.url.pathname}" />
 
@@ -24,6 +21,7 @@
         {#if meta.image}
             {#each meta.image as image}
                 <meta property="og:image" content={image.src} />
+                <meta name="twitter:image" content={image.src} />
             {/each}
         {/if}
 
@@ -34,7 +32,7 @@
             {:else}
                 <meta property="og:type" content="article">
                 <meta property="twitter:card" content="summary_large_image" />
-		<meta property="article:published_time" content={meta.article.published_time}>
+		        <meta property="article:published_time" content={meta.article.published_time}>
             {/if}
         {/if}
 
