@@ -25,7 +25,7 @@ const metaVideo = async (post: AppBskyFeedDefs.ThreadViewPost): Promise<Meta['vi
 
             const did = (post.post.author.did as `did:${string}`)
             const pds = await resolveHandle(did)
-            return { src: `${pds}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${post.post.embed.cid}&r=8`, height: post.post.embed.aspectRatio?.height || 0, width: post.post.embed.aspectRatio?.width || 0 }
+            return { src: `${pds}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${post.post.embed.cid}`, height: post.post.embed.aspectRatio?.height || 0, width: post.post.embed.aspectRatio?.width || 0 }
         }
 
 	return undefined;
@@ -54,7 +54,7 @@ export const load: PageLoad = async ({ params, parent }) => {
 		},
 		type: 'video.other',
 		image: metaImages(data.thread),
-		video: browser ? await metaVideo(data.thread) : undefined
+		video: browser ? undefined : await metaVideo(data.thread)
 	};
 
 	return {

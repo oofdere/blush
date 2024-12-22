@@ -3,12 +3,10 @@
     import { page } from "$app/state";
 	import type { Meta } from "$lib";
 
-    
+    const meta: Meta = page.data.meta
 </script>
 
 <svelte:head>
-    {#if true}
-        {@const meta: Meta = page.data.meta}
         <title>{meta.title || "dere.social"}</title>
         <meta property="og:title" content={meta.title || "dere.social"}>
         
@@ -27,7 +25,6 @@
 
         {#if meta.article}
             {#if meta.video}
-                <meta property="og:type" content="video.other">
                 <meta property="twitter:card" content="player"/>
             {:else}
                 <meta property="og:type" content="article">
@@ -60,7 +57,7 @@
 
         <meta property="og:site_name" content="dere.social">
         <meta property="theme-color" content="#155E75">
-    {/if}
+
 </svelte:head>
 
 <div class="text-white bg-cyan-800">
