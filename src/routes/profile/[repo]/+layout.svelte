@@ -51,10 +51,6 @@
         {/if}
 
         {#if meta.video}
-            <meta property="og:video" content={meta.video.src} />
-            <meta property="og:video:width" content="{meta.video.width}" />
-            <meta property="og:video:height" content="{meta.video.height}" />
-
             <meta property="twitter:player:height" content="{meta.video.height}"/>
             <meta property="twitter:player:width" content="{meta.video.width}"/>
             <meta property="og:video:height" content="{meta.video.height}"/>
