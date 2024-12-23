@@ -55,7 +55,12 @@
             <meta property="og:video:type" content="video/mp4"/>
         {/if}
 
-        <meta property="og:site_name" content="dere.social">
+        {#if meta.stats}
+            <meta property="og:site_name" content="dere.social | {meta.stats}">
+        {:else}
+            <meta property="og:site_name" content="dere.social">
+        {/if}
+
         <meta property="theme-color" content="#155E75">
 
 </svelte:head>

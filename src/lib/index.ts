@@ -20,7 +20,8 @@ export type Meta = {
         src: string,
         width: number,
         height: number
-    }
+    },
+    stats?: string
 }
 
 export const baseurl = "https://dere.social"

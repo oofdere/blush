@@ -54,7 +54,8 @@ export const load: PageLoad = async ({ params, parent }) => {
 		},
 		type: 'video.other',
 		image: metaImages(data.thread),
-		video: browser ? undefined : await metaVideo(data.thread)
+		video: browser ? undefined : await metaVideo(data.thread),
+		stats: `${data.thread.post.likeCount} likes | ${data.thread.post.repostCount} reposts | ${data.thread.post.replyCount} replies`
 	};
 
 	return {

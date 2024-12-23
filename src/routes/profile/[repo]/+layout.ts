@@ -18,7 +18,8 @@ export const load: LayoutLoad = async ({ params }) => {
 			{
 				src: profile.data.avatar
 			}
-		]
+		],
+		stats: `${profile.data.followersCount} followers | ${profile.data.followsCount} following | ${profile.data.postsCount} posts`
 	};
 
 	return {
