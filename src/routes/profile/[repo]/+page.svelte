@@ -32,6 +32,7 @@
 	$inspect(data)
 </script>
 
+
 <div class="min-h-screen md:h-screen w-screen bg-cyan-800 text-white md:flex">
 	<div class="h-full overflow-y-scroll">
 		<div class="bg-slate-800 top-0 z-10">

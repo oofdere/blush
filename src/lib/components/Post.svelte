@@ -26,7 +26,7 @@
 		showAuthor
 	}: {
 		post: AppBskyFeedDefs.FeedViewPost | AppBskyFeedDefs.ThreadViewPost;
-		profile: AppBskyActorDefs.ProfileViewDetailed;
+		profile?: AppBskyActorDefs.ProfileViewDetailed;
 		showAuthor: boolean;
 	} = $props();
 
@@ -70,7 +70,7 @@
 				{#if record.embed}
 					{@render embed()}
 				{:else}
-					{#if post.post.author.did === profile.did}
+					{#if post.post.author.did === profile?.did}
 						<div class="px-2 opacity-60">
 							{date}
 						</div>
@@ -114,8 +114,8 @@
 				<span>pinned post!</span>
 			{:else if reason === 'app.bsky.feed.defs#reasonRepost'}
 				<LucideRefreshCw class="animate-spina" />
-				<span>reposted by</span> <img class="h-6" src={profile.avatar} alt="avatar" />
-				<span>{profile.displayName}</span>
+				<span>reposted by</span> <img class="h-6" src={profile?.avatar} alt="avatar" />
+				<span>{profile?.displayName}</span>
 			{/if}
 		</div>
 	</svelte:boundary>

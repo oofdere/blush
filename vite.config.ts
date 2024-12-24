@@ -12,5 +12,5 @@ export default defineConfig({
 			emitFile: true,
 			filename: "stats.html"
 		})
-	]
+	],
 });
