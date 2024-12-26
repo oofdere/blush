@@ -7,42 +7,38 @@
 
 <div class="min-h-screen w-screen flex-col bg-cyan-950 text-white">
 	{#await data.profile then profile}
-	<a href="/profile/{profile.did}" class="bg-slate-800">
-		<div class="header h-48 bg-cover text-white" style:--bg-url={data.profile.banner ? `url('${data.profile.banner}')` : ''}>
-			<div class="flex items-center gap-3 p-6 pb-10 pt-16">
-				<img src={profile.avatar} class="avatar w-20 rounded-xl" alt="avatar" />
-				<div class="-gap-2 text-shadow flex flex-col">
-					<span class="text-2xl font-semibold">{profile.displayName}</span>
-					<span class="text-gray-400">@{profile.handle}</span>
-					<div
-		class=""
-	>
-		<span class="">
-			📤 {profile.followersCount}
-		</span>
-		<span class="">
-			📥 {profile.followsCount}
-		</span>
-		<span class="">
-			📝 {profile.postsCount}
-		</span>
-	</div>
+		<a href="/profile/{profile.did}" class="bg-slate-800">
+			<div
+				class="header h-48 bg-cover text-white"
+				style:--bg-url={data.profile.banner ? `url('${data.profile.banner}')` : ''}
+			>
+				<div class="flex items-center gap-3 p-6 pb-10 pt-16">
+					<img src={profile.avatar} class="avatar w-20 rounded-xl" alt="avatar" />
+					<div class="-gap-2 text-shadow flex flex-col">
+						<span class="text-2xl font-semibold">{profile.displayName}</span>
+						<span class="text-gray-400">@{profile.handle}</span>
+						<div class="">
+							<span class="">
+								📤 {profile.followersCount}
+							</span>
+							<span class="">
+								📥 {profile.followsCount}
+							</span>
+							<span class="">
+								📝 {profile.postsCount}
+							</span>
+						</div>
+					</div>
 				</div>
-				
 			</div>
-		</div>
-	</a>
-
-	
+		</a>
 	{/await}
 
-	<div class="flex flex-col gap-2 border-slate-400 border-opacity-45 inse bg-cyan-950 px-6 ">
+	<div class="inse flex flex-col gap-2 border-slate-400 border-opacity-45 bg-cyan-950 px-6">
 		<div class="flex flex-col gap-4">
-
-		<div class="-translate-y-4">
-			<Post post={data.post} profile={data.profile} showAuthor={false} />
-		</div>
-
+			<div class="-translate-y-4">
+				<Post post={data.post} profile={data.profile} showAuthor={false} />
+			</div>
 		</div>
 	</div>
 </div>

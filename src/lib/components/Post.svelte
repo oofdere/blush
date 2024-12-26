@@ -2,7 +2,6 @@
 	import type {
 		AppBskyActorDefs,
 		AppBskyEmbedExternal,
-		AppBskyEmbedImages,
 		AppBskyEmbedVideo,
 		AppBskyFeedDefs,
 		AppBskyFeedPost
@@ -41,7 +40,6 @@
 	const date = $derived(formatDistanceToNow(record.createdAt) + ' ago');
 
 	const textsegments = $derived(segmentize(record.text, record.facets));
-
 </script>
 
 <svelte:boundary>
@@ -50,7 +48,11 @@
 		{JSON.stringify(x)}
 		{JSON.stringify(post)}
 	{/snippet}
-	<button onclick={() => goto(`/profile/${post.post.author.did}/post/${post.post.uri.slice(-13)}`)} style="transform:rotate({angle}deg)" class="max-w-96 text-white">
+	<button
+		onclick={() => goto(`/profile/${post.post.author.did}/post/${post.post.uri.slice(-13)}`)}
+		style="transform:rotate({angle}deg)"
+		class="max-w-96 text-white"
+	>
 		{#if 'reason' in post}
 			{@render reason(post)}
 		{/if}
@@ -83,7 +85,7 @@
 						{#snippet failed()}
 							exploeded when rendering reaction
 						{/snippet}
-						<div class="flex items-center gap-2 p-2  {active ? 'bg-white text-cyan-950' : ''}">
+						<div class="flex items-center gap-2 p-2 {active ? 'bg-white text-cyan-950' : ''}">
 							<Icon />
 							{count}
 						</div>
@@ -93,7 +95,11 @@
 				<div class="flex divide-x-2 divide-slate-400 divide-opacity-50">
 					{@render reaction(LucideMessageSquare, post.post.replyCount)}
 					{@render reaction(LucideHeart, post.post.likeCount, !!post.post.viewer?.like)}
-					{@render reaction(LucideRefreshCw, post.post.quoteCount! + post.post.repostCount!, !!post.post.viewer?.repost)}
+					{@render reaction(
+						LucideRefreshCw,
+						post.post.quoteCount! + post.post.repostCount!,
+						!!post.post.viewer?.repost
+					)}
 					<div></div>
 					<!-- for final divider line -->
 				</div>
@@ -169,7 +175,7 @@
 	<svelte:boundary>
 		{#if record.text}
 			<div
-				class="{record.embed.$type !== 'app.bsky.embed.record'
+				class="{record.embed?.$type !== 'app.bsky.embed.record'
 					? 'border-b-2'
 					: ''} border-slate-400 border-opacity-50 pt-2"
 			></div>
@@ -181,14 +187,14 @@
 					<a href={embed.external.uri}>
 						{#if embed.external.uri.includes('media.tenor.com')}
 							<div class="w-full bg-red-500">
-								<img src={embed.external.uri} class="w-full" />
+								<img src={embed.external.uri} alt={embed.external.description} class="w-full" />
 							</div>
 						{:else}
 							{#await thread}
 								loading . . .
 							{:then { data }}
 								{@const embed: AppBskyEmbedExternal.View = (data.thread as any).post.embed}
-								<img class="w-full" src={embed.external.thumb} />
+								<img class="w-full" src={embed.external.thumb} alt={embed.external.description} />
 							{/await}
 							<div class="p-2">
 								<span class="font-bold">{embed.external.title}</span>
@@ -200,7 +206,7 @@
 				{/if}
 
 				{#if embed.$type === 'app.bsky.embed.images'}
-				<Images skeleton={embed} {thread} />
+					<Images skeleton={embed} {thread} />
 				{/if}
 
 				{#if embed.$type === 'app.bsky.embed.video'}
@@ -233,7 +239,7 @@
 					{/await}
 				{/if}
 			</div>
-			{#if post.post.author.did === profile.did}
+			{#if post.post.author.did === profile?.did}
 				<div class="px-2 py-1 opacity-60">
 					{date}
 				</div>

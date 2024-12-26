@@ -1,8 +1,5 @@
 <script lang="ts">
-	import type {
-		AppBskyEmbedImages,
-		AppBskyFeedGetPostThread
-	} from '@atcute/client/lexicons';
+	import type { AppBskyEmbedImages, AppBskyFeedGetPostThread } from '@atcute/client/lexicons';
 	import { type XRPCResponse } from '@atcute/client';
 
 	const {
@@ -29,14 +26,14 @@
 					class="pointer-events-none relative flex h-full w-full touch-manipulation snap-start items-center bg-black"
 					style="aspect-ratio: {image.aspectRatio?.width}/{image.aspectRatio?.height}"
 				>
-					{#await thread then { data }} 
-							<img
-								class="h-full w-full"
-								width={image.aspectRatio?.width}
-								height={image.aspectRatio?.height}
-								src={(data.thread as any).post.embed.images[key].thumb}
-								alt={image.alt}
-							/>
+					{#await thread then { data }}
+						<img
+							class="h-full w-full"
+							width={image.aspectRatio?.width}
+							height={image.aspectRatio?.height}
+							src={(data.thread as any).post.embed.images[key].thumb}
+							alt={image.alt}
+						/>
 					{/await}
 
 					{#if skeleton.images.length > 1}

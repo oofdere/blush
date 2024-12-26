@@ -3,7 +3,7 @@ import { atp } from '$lib/atcute';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async ({ params }) => {
-	const { rpc, manager } = atp();
+	const { rpc } = atp();
 
 	const profile = await rpc.get('app.bsky.actor.getProfile', { params: { actor: params.repo } });
 

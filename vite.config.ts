@@ -1,8 +1,7 @@
-
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import Icons from 'unplugin-icons/vite';
-import { visualizer } from "rollup-plugin-visualizer";
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
 	plugins: [
@@ -10,7 +9,7 @@ export default defineConfig({
 		Icons({ compiler: 'svelte' }),
 		visualizer({
 			emitFile: true,
-			filename: "stats.html"
+			filename: 'stats.html'
 		})
-	],
+	]
 });
