@@ -17,7 +17,7 @@
 			images failed to load
 		{/snippet}
 		<div
-			class="images horizontal flex w-full snap-x snap-mandatory overflow-y-clip overflow-x-scroll"
+			class="images horizontal flex w-full snap-x snap-mandatory overflow-x-scroll overflow-y-clip"
 			style="aspect-ratio: {skeleton.images[0].aspectRatio?.width}/{skeleton.images[0].aspectRatio
 				?.height}"
 		>

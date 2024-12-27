@@ -59,7 +59,7 @@
 
 		<div class="text-left">
 			<div
-				class=" rounded-lg border-2 border-slate-400 border-opacity-50 bg-cyan-950 shadow-md shadow-black"
+				class=" border-opacity-50 overflow-clip rounded-lg border-2 border-slate-400 bg-cyan-950 shadow-md shadow-black"
 			>
 				{#if showAuthor}
 					{@render author()}
@@ -77,7 +77,7 @@
 							{date}
 						</div>
 					{/if}
-					<div class="border-b-2 border-slate-400 border-opacity-50 pt-2"></div>
+					<div class="border-opacity-50 border-b-2 border-slate-400 pt-2"></div>
 				{/if}
 
 				{#snippet reaction(Icon: Component, count?: number, active?: boolean)}
@@ -92,7 +92,7 @@
 					</svelte:boundary>
 				{/snippet}
 
-				<div class="flex divide-x-2 divide-slate-400 divide-opacity-50">
+				<div class="divide-opacity-50 flex divide-x-2 divide-slate-400">
 					{@render reaction(LucideMessageSquare, post.post.replyCount)}
 					{@render reaction(LucideHeart, post.post.likeCount, !!post.post.viewer?.like)}
 					{@render reaction(
@@ -134,7 +134,7 @@
 		{/snippet}
 		<a
 			href="/profile/{post.post.author.did}"
-			class="flex items-center gap-2 border-b-2 border-slate-400 border-opacity-50"
+			class="border-opacity-50 flex items-center gap-2 border-b-2 border-slate-400"
 		>
 			<img class="w-12" src={post.post.author.avatar} alt="avatar" />
 			<div class="flex flex-col">
@@ -150,7 +150,7 @@
 {/snippet}
 
 {#snippet text()}
-	<div class="whitespace-pre-line border-slate-400 border-opacity-50 px-2 pt-2">
+	<div class="border-opacity-50 border-slate-400 px-2 pt-2 whitespace-pre-line">
 		{#each textsegments as s}
 			{#if s.features}
 				{#each s.features as f}
@@ -177,12 +177,12 @@
 			<div
 				class="{record.embed?.$type !== 'app.bsky.embed.record'
 					? 'border-b-2'
-					: ''} border-slate-400 border-opacity-50 pt-2"
+					: ''} border-opacity-50 border-slate-400 pt-2"
 			></div>
 		{/if}
 		{#if record.embed}
 			{@const embed = record.embed}
-			<div class="border-b-2 border-slate-400 border-opacity-50">
+			<div class="border-opacity-50 border-b-2 border-slate-400">
 				{#if embed.$type === 'app.bsky.embed.external'}
 					<a href={embed.external.uri}>
 						{#if embed.external.uri.includes('media.tenor.com')}
@@ -243,7 +243,7 @@
 				<div class="px-2 py-1 opacity-60">
 					{date}
 				</div>
-				<div class="border-b-2 border-slate-400 border-opacity-50"></div>
+				<div class="border-opacity-50 border-b-2 border-slate-400"></div>
 			{/if}
 		{/if}
 		{#snippet failed()}

@@ -12,7 +12,7 @@
 				class="header h-48 bg-cover text-white"
 				style:--bg-url={data.profile.banner ? `url('${data.profile.banner}')` : ''}
 			>
-				<div class="flex items-center gap-3 p-6 pb-10 pt-16">
+				<div class="flex items-center gap-3 p-6 pt-16 pb-10">
 					<img src={profile.avatar} class="avatar w-20 rounded-xl" alt="avatar" />
 					<div class="-gap-2 text-shadow flex flex-col">
 						<span class="text-2xl font-semibold">{profile.displayName}</span>
@@ -34,7 +34,7 @@
 		</a>
 	{/await}
 
-	<div class="inse flex flex-col gap-2 border-slate-400 border-opacity-45 bg-cyan-950 px-6">
+	<div class="inse border-opacity-45 flex flex-col gap-2 border-slate-400 bg-cyan-950 px-6">
 		<div class="flex flex-col gap-4">
 			<div class="-translate-y-4">
 				<Post post={data.post} profile={data.profile} showAuthor={false} />
@@ -53,14 +53,5 @@
 			),
 			var(--bg-url);
 		background-size: cover;
-	}
-
-	.text-shadow {
-		filter: drop-shadow(1px 1px rgb(0 0 0 / 0.69));
-	}
-
-	.avatar {
-		outline: 3px solid rgba(243, 243, 243, 0.304);
-		outline-offset: -2.5px;
 	}
 </style>

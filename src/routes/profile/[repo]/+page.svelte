@@ -49,7 +49,7 @@
 				style:aspect-ratio="818/272"
 				style:--bg-url={data.profile.banner ? `url('${data.profile.banner}')` : ''}
 			>
-				<div class="flex items-center gap-3 p-6 pb-10 pt-16">
+				<div class="flex items-center gap-3 p-6 pt-16 pb-10">
 					<img src={data.profile.avatar} class="avatar w-20 rounded-xl" alt="avatar" />
 					<div class="-gap-2 text-shadow flex flex-col">
 						<span class="text-2xl font-semibold">{data.profile.displayName}</span>
@@ -73,7 +73,7 @@
 			</span>
 		</div>
 
-		<div class="-mt-5 whitespace-pre-line px-6 pb-2">
+		<div class="-mt-5 px-6 pb-2 whitespace-pre-line">
 			<p class="pb-2">
 				{#each textsegments as f}
 					{#if f.type === 'link' || f.type === 'autolink'}
@@ -96,7 +96,7 @@
 	</div>
 	{#key page.url.pathname}
 		<div
-			class="inse flex h-full w-full flex-col gap-2 overflow-y-scroll border-slate-400 border-opacity-45 bg-cyan-950 px-6 py-4"
+			class="inse border-opacity-45 flex h-full w-full flex-col gap-2 overflow-y-scroll border-slate-400 bg-cyan-950 px-6 py-4"
 		>
 			<div class="flex flex-col gap-4">
 				{#each feed.feed as post (JSON.stringify(post.reason) + post.post.cid)}
@@ -137,14 +137,5 @@
 			),
 			var(--bg-url);
 		background-size: cover;
-	}
-
-	.text-shadow {
-		filter: drop-shadow(1px 1px rgb(0 0 0 / 0.69));
-	}
-
-	.avatar {
-		outline: 3px solid rgba(243, 243, 243, 0.304);
-		outline-offset: -2.5px;
 	}
 </style>

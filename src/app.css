@@ -1,6 +1,13 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import 'tailwindcss';
+
+.text-shadow {
+	filter: drop-shadow(0.3tw 0.3tw rgb(0 0 0 / 0.69));
+}
+
+.avatar {
+	outline: 1.1tw solid rgba(243, 243, 243, 0.304);
+	outline-offset: -1tw;
+}
 
 ::-webkit-scrollbar {
 	display: none;

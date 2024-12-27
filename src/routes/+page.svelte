@@ -34,7 +34,7 @@
 {#if feed}
 	{#key page.url.pathname}
 		<div
-			class="inse flex h-full w-full flex-col gap-2 overflow-y-scroll border-slate-400 border-opacity-45 bg-cyan-950 px-6 py-4"
+			class="inse border-opacity-45 flex h-full w-full flex-col gap-2 overflow-y-scroll border-slate-400 bg-cyan-950 px-6 py-4"
 		>
 			<div class="flex flex-col gap-4">
 				{#each feed.feed as post (JSON.stringify(post.reason) + post.post.cid)}
